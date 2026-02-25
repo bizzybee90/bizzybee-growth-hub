@@ -1,170 +1,283 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
-import { Hexagon, Mic, GraduationCap, Layers, Brain, RotateCcw } from "lucide-react";
+import {
+  Hexagon, Mic, GraduationCap, Layers, Brain, RotateCcw,
+  Mail, MessageSquare, Phone, Star, Clock, Tag, User, Sparkles,
+} from "lucide-react";
 
-const demos = [
+const ease = [0.16, 1, 0.3, 1] as const;
+
+/* ─── Demo scene data ─── */
+type DemoScene = {
+  id: string;
+  icon: React.ReactNode;
+  label: string;
+  title: string;
+  description: string;
+};
+
+const scenes: DemoScene[] = [
   {
-    id: "honeycomb",
-    icon: <Hexagon className="w-5 h-5" />,
-    label: "Honeycomb Sort",
+    id: "sort",
+    icon: <Hexagon className="w-4 h-4" />,
+    label: "Smart Inbox Sort",
     title: "Smart inbox that prioritises itself",
-    description: "AI-powered triage sorts every message by urgency, intent, and value. Hot leads float to the top. Spam disappears. You focus on what matters.",
-    visual: (
-      <div className="space-y-3">
-        {[
-          { tag: "🔥 Hot Lead", msg: "Hi, I need a full bathroom refit — budget £8k", time: "2m ago", priority: true },
-          { tag: "📅 Booking", msg: "Can I move my appointment to Friday?", time: "5m ago", priority: false },
-          { tag: "💬 Enquiry", msg: "Do you cover the SW19 area?", time: "12m ago", priority: false },
-          { tag: "✅ Resolved", msg: "Thanks, the quote looks great!", time: "1h ago", priority: false },
-        ].map((item, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className={`flex items-center gap-3 p-3 rounded-xl border ${item.priority ? "border-border-hover bg-primary-glow/20" : "border-border bg-background"}`}
-          >
-            <span className="text-xs shrink-0">{item.tag}</span>
-            <span className="text-sm text-foreground truncate flex-1">{item.msg}</span>
-            <span className="font-mono-label text-muted-foreground shrink-0">{item.time}</span>
-          </motion.div>
-        ))}
-      </div>
-    ),
+    description: "AI-powered triage sorts every message by urgency, intent, and value. Hot leads float to the top. Spam disappears.",
   },
   {
-    id: "voice",
-    icon: <Mic className="w-5 h-5" />,
-    label: "AI Draft Voice",
+    id: "draft",
+    icon: <Mic className="w-4 h-4" />,
+    label: "AI Draft Replies",
     title: "Replies that sound like you",
-    description: "BizzyBee learns your tone of voice from past messages. Every AI draft feels personal, professional, and perfectly on-brand.",
-    visual: (
-      <div className="space-y-4">
-        <div className="p-4 rounded-xl border border-border bg-background-alt">
-          <span className="font-mono-label text-muted-foreground block mb-2">Customer message</span>
-          <p className="text-sm text-foreground">"Hi mate, got a leaky tap in the kitchen. How much to fix it and when can you come out?"</p>
-        </div>
-        <div className="p-4 rounded-xl border border-border-hover bg-primary-glow/10">
-          <span className="font-mono-label text-primary block mb-2">AI Draft (your voice)</span>
-          <p className="text-sm text-foreground">"Hiya! A leaky tap is usually a quick fix — most of the time it's just a washer. I charge £65 for the first hour including callout. I've got a slot Thursday morning or Friday afternoon. Which works best for you? 👍"</p>
-        </div>
-      </div>
-    ),
+    description: "BizzyBee learns your tone from past messages. Toggle between a generic reply and your AI-matched voice.",
   },
   {
     id: "training",
-    icon: <GraduationCap className="w-5 h-5" />,
+    icon: <GraduationCap className="w-4 h-4" />,
     label: "Training Hive",
     title: "Teach your AI in plain English",
-    description: "No prompts. No code. Just tell BizzyBee your services, prices, and rules — and it learns instantly.",
-    visual: (
-      <div className="space-y-3">
-        {[
-          { label: "Services", value: "Plumbing, Heating, Bathroom Fitting", done: true },
-          { label: "Service area", value: "SW London, Surrey, within 15 miles", done: true },
-          { label: "Pricing rules", value: "£65/hr first hour, £45/hr after", done: true },
-          { label: "Booking rules", value: "Mon-Fri 8am-6pm, emergencies 24/7", done: false },
-        ].map((item, i) => (
-          <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-border bg-background">
-            <div>
-              <span className="font-mono-label text-muted-foreground block">{item.label}</span>
-              <span className="text-sm text-foreground">{item.value}</span>
-            </div>
-            <span className={`text-xs px-2 py-1 rounded-full ${item.done ? "bg-green-100 text-green-700" : "bg-primary-glow text-primary"}`}>
-              {item.done ? "Trained" : "In progress"}
-            </span>
-          </div>
-        ))}
-      </div>
-    ),
+    description: "No prompts. No code. Just tell BizzyBee your services, prices, and rules — it learns instantly.",
   },
   {
     id: "omnichannel",
-    icon: <Layers className="w-5 h-5" />,
+    icon: <Layers className="w-4 h-4" />,
     label: "Omnichannel Flow",
     title: "Every channel, one inbox",
     description: "WhatsApp, Facebook Messenger, email, website chat, and SMS — all flowing into a single, beautiful inbox.",
-    visual: (
-      <div className="grid grid-cols-2 gap-3">
-        {[
-          { channel: "WhatsApp", count: 12, color: "bg-green-500" },
-          { channel: "Facebook", count: 8, color: "bg-blue-500" },
-          { channel: "Email", count: 23, color: "bg-red-400" },
-          { channel: "Website Chat", count: 5, color: "bg-primary" },
-        ].map((ch, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.08 }}
-            className="p-4 rounded-xl border border-border bg-background text-center"
-          >
-            <div className={`w-3 h-3 rounded-full ${ch.color} mx-auto mb-2`} />
-            <span className="text-sm font-medium text-foreground block">{ch.channel}</span>
-            <span className="text-2xl font-bold text-foreground">{ch.count}</span>
-            <span className="font-mono-label text-muted-foreground block">messages</span>
-          </motion.div>
-        ))}
-      </div>
-    ),
   },
   {
     id: "brain",
-    icon: <Brain className="w-5 h-5" />,
+    icon: <Brain className="w-4 h-4" />,
     label: "Business Brain",
     title: "AI that truly knows your business",
-    description: "BizzyBee builds a knowledge graph of your services, customers, and history — getting smarter with every conversation.",
-    visual: (
-      <div className="p-6 rounded-xl border border-border bg-background text-center">
-        <div className="grid grid-cols-3 gap-4">
-          {[
-            { label: "Knowledge items", value: "247" },
-            { label: "Accuracy", value: "96.4%" },
-            { label: "Conversations", value: "1,832" },
-          ].map((stat, i) => (
-            <div key={i}>
-              <span className="text-2xl font-bold text-foreground block">{stat.value}</span>
-              <span className="font-mono-label text-muted-foreground">{stat.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    ),
+    description: "BizzyBee slides your prices, availability, and service area into replies automatically.",
   },
   {
     id: "feedback",
-    icon: <RotateCcw className="w-5 h-5" />,
+    icon: <RotateCcw className="w-4 h-4" />,
     label: "Feedback Loop",
     title: "Every correction makes it smarter",
-    description: "Approve, edit, or reject AI drafts — and BizzyBee learns from every interaction to get better over time.",
-    visual: (
-      <div className="space-y-3">
-        <div className="p-4 rounded-xl border border-border bg-background">
-          <div className="flex items-center justify-between mb-2">
-            <span className="font-mono-label text-muted-foreground">This week's learning</span>
-            <span className="text-xs text-green-600 font-medium">↑ 4.2% accuracy</span>
-          </div>
-          <div className="flex gap-2">
-            <div className="flex-1 bg-green-500/20 rounded-full h-2"><div className="bg-green-500 rounded-full h-2 w-[89%]" /></div>
-          </div>
-          <div className="flex justify-between mt-1">
-            <span className="font-mono-label text-muted-foreground">89% approved</span>
-            <span className="font-mono-label text-muted-foreground">11% corrected</span>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <button className="flex-1 py-2 rounded-lg border border-green-500 text-green-600 text-sm font-medium">✓ Approve</button>
-          <button className="flex-1 py-2 rounded-lg border border-border text-foreground text-sm font-medium">✏️ Edit</button>
-          <button className="flex-1 py-2 rounded-lg border border-destructive/30 text-destructive text-sm font-medium">✗ Reject</button>
-        </div>
-      </div>
-    ),
+    description: "Approve, edit, or reject drafts. BizzyBee learns from every interaction to improve over time.",
   },
 ];
 
+/* ─── Inbox message list data ─── */
+const inboxMessages = [
+  { id: 1, from: "Sarah M.", subject: "Re: Tap still dripping", channel: "email" as const, time: "2m", badge: "🔥 Urgent", badgeColour: "bg-red-50 text-red-600 border-red-100", unread: true },
+  { id: 2, from: "James K.", subject: "Quote for bathroom refit", channel: "whatsapp" as const, time: "8m", badge: "💰 Quote", badgeColour: "bg-amber-50 text-amber-700 border-amber-100", unread: true },
+  { id: 3, from: "+44 7911…", subject: "Emergency — tomorrow AM?", channel: "whatsapp" as const, time: "15m", badge: "📅 Booking", badgeColour: "bg-emerald-50 text-emerald-700 border-emerald-100", unread: true },
+  { id: 4, from: "Checkatrade", subject: "New lead in your area", channel: "email" as const, time: "1h", badge: "💰 Quote", badgeColour: "bg-amber-50 text-amber-700 border-amber-100", unread: false },
+  { id: 5, from: "David T.", subject: "Thanks for last week", channel: "sms" as const, time: "2h", badge: "ℹ️ Info", badgeColour: "bg-muted/20 text-muted-foreground border-border", unread: false },
+];
+
+const channelIcon = {
+  email: <Mail className="w-3.5 h-3.5" />,
+  whatsapp: <MessageSquare className="w-3.5 h-3.5" />,
+  sms: <Phone className="w-3.5 h-3.5" />,
+};
+
+/* ─── Reading pane content per scene ─── */
+const ReadingPane = ({ sceneId }: { sceneId: string }) => {
+  const [voiceMode, setVoiceMode] = useState<"generic" | "yours">("generic");
+
+  switch (sceneId) {
+    case "sort":
+      return (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm font-semibold text-foreground">Sarah M.</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-red-50 text-red-600 border-red-100">Urgent</span>
+          </div>
+          <p className="text-sm text-foreground/80 leading-relaxed">"Hi, just following up again on the tap. It's been two days now and the dripping's got worse. Could you pop over this week?"</p>
+          <div className="mt-4 p-3 rounded-xl bg-primary-glow/30 border border-primary/10">
+            <div className="flex items-center gap-1.5 mb-1">
+              <Sparkles className="w-3 h-3 text-primary" />
+              <span className="font-mono-label text-primary">AI briefing</span>
+            </div>
+            <p className="text-xs text-foreground/70">Repeat follow-up — customer waiting 2 days for a leaking tap fix. Suggest priority slot tomorrow.</p>
+          </div>
+        </div>
+      );
+    case "draft":
+      return (
+        <div className="space-y-3">
+          <div className="flex gap-2 mb-3">
+            <button onClick={() => setVoiceMode("generic")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${voiceMode === "generic" ? "bg-muted/20 text-foreground border border-border" : "text-muted-foreground"}`}>Generic</button>
+            <button onClick={() => setVoiceMode("yours")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${voiceMode === "yours" ? "gradient-honey text-primary-foreground" : "text-muted-foreground"}`}>Your voice</button>
+          </div>
+          <AnimatePresence mode="wait">
+            <motion.div key={voiceMode} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3, ease }}>
+              {voiceMode === "generic" ? (
+                <div className="p-4 rounded-xl border border-border bg-background-alt">
+                  <p className="text-sm text-foreground/70 leading-relaxed">"Dear Customer, Thank you for your enquiry. We will respond within 24–48 business hours. Kind regards, [Business Name]."</p>
+                </div>
+              ) : (
+                <div className="p-4 rounded-xl border border-primary/20 bg-primary-glow/10">
+                  <p className="text-sm text-foreground leading-relaxed">"Hiya! A leaky tap is usually a quick fix — most of the time it's just a washer. I charge £65 for the first hour including callout. I've got a slot Thursday morning or Friday afternoon. Which works best? 👍"</p>
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      );
+    case "training":
+      return (
+        <div className="space-y-2.5">
+          {[
+            { label: "Services", value: "Plumbing, Heating, Bathroom Fitting", done: true },
+            { label: "Service area", value: "SW London, Surrey, within 15 miles", done: true },
+            { label: "Pricing", value: "£65/hr first hour, £45/hr after", done: true },
+            { label: "Booking rules", value: "Mon–Fri 8am–6pm, emergencies 24/7", done: false },
+          ].map((item, i) => (
+            <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-border bg-background">
+              <div>
+                <span className="font-mono-label text-muted-foreground block">{item.label}</span>
+                <span className="text-sm text-foreground">{item.value}</span>
+              </div>
+              <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${item.done ? "bg-emerald-50 text-emerald-600" : "bg-primary-glow text-primary"}`}>
+                {item.done ? "Trained" : "Learning…"}
+              </span>
+            </div>
+          ))}
+        </div>
+      );
+    case "omnichannel":
+      return (
+        <div className="grid grid-cols-2 gap-2.5">
+          {[
+            { ch: "WhatsApp", count: 12, colour: "bg-emerald-500" },
+            { ch: "Facebook", count: 8, colour: "bg-blue-500" },
+            { ch: "Email", count: 23, colour: "bg-red-400" },
+            { ch: "Web Chat", count: 5, colour: "bg-primary" },
+          ].map((c, i) => (
+            <motion.div key={i} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.06, ease }} className="p-4 rounded-xl border border-border bg-background text-center">
+              <div className={`w-2.5 h-2.5 rounded-full ${c.colour} mx-auto mb-2`} />
+              <span className="text-xs font-medium text-foreground block">{c.ch}</span>
+              <span className="text-xl font-bold text-foreground">{c.count}</span>
+              <span className="font-mono-label text-muted-foreground block">messages</span>
+            </motion.div>
+          ))}
+        </div>
+      );
+    case "brain":
+      return (
+        <div className="space-y-3">
+          <div className="p-4 rounded-xl border border-border bg-background-alt">
+            <p className="text-sm text-foreground/80 leading-relaxed mb-3">"Hi, how much for a full bathroom refit?"</p>
+          </div>
+          <div className="p-4 rounded-xl border border-primary/20 bg-primary-glow/10">
+            <p className="text-sm text-foreground leading-relaxed">
+              "Bathroom refits typically start from{" "}
+              <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4, type: "spring", stiffness: 120, damping: 16 }} className="inline-flex items-center gap-1 bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded-lg text-xs border border-primary/20">
+                <Tag className="w-3 h-3" /> £3,500
+              </motion.span>
+              {" "}for a standard size. I'd love to pop over for a free quote — I've got availability{" "}
+              <motion.span initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7, type: "spring", stiffness: 120, damping: 16 }} className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 font-semibold px-2 py-0.5 rounded-lg text-xs border border-emerald-100">
+                <Clock className="w-3 h-3" /> Thursday AM
+              </motion.span>
+              ."
+            </p>
+          </div>
+        </div>
+      );
+    case "feedback":
+      return (
+        <div className="space-y-3">
+          <div className="p-3 rounded-xl border border-border bg-background">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-mono-label text-muted-foreground">This week's learning</span>
+              <span className="text-[10px] text-emerald-600 font-medium">↑ 4.2% accuracy</span>
+            </div>
+            <div className="w-full bg-muted/10 rounded-full h-1.5">
+              <div className="bg-emerald-500 rounded-full h-1.5" style={{ width: "89%" }} />
+            </div>
+            <div className="flex justify-between mt-1.5">
+              <span className="font-mono-label text-muted-foreground">89% approved</span>
+              <span className="font-mono-label text-muted-foreground">11% corrected</span>
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button className="flex-1 py-2 rounded-xl border border-emerald-200 text-emerald-600 text-xs font-medium bg-emerald-50/50 hover:bg-emerald-50 transition-colors">✓ Approve</button>
+            <button className="flex-1 py-2 rounded-xl border border-border text-foreground text-xs font-medium hover:bg-background-alt transition-colors">✏️ Edit</button>
+            <button className="flex-1 py-2 rounded-xl border border-destructive/20 text-destructive text-xs font-medium hover:bg-red-50/50 transition-colors">✗ Reject</button>
+          </div>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+/* ─── Insights sidebar per scene ─── */
+const InsightsPane = ({ sceneId }: { sceneId: string }) => {
+  const insights: Record<string, { items: { icon: React.ReactNode; label: string; value: string }[] }> = {
+    sort: {
+      items: [
+        { icon: <Star className="w-3 h-3 text-primary" />, label: "Priority", value: "Urgent" },
+        { icon: <Clock className="w-3 h-3 text-primary" />, label: "Wait time", value: "2 days" },
+        { icon: <User className="w-3 h-3 text-primary" />, label: "Customer", value: "Repeat" },
+      ],
+    },
+    draft: {
+      items: [
+        { icon: <Mic className="w-3 h-3 text-primary" />, label: "Voice match", value: "96%" },
+        { icon: <Clock className="w-3 h-3 text-primary" />, label: "Draft time", value: "1.2s" },
+        { icon: <Star className="w-3 h-3 text-primary" />, label: "Tone", value: "Friendly" },
+      ],
+    },
+    training: {
+      items: [
+        { icon: <Brain className="w-3 h-3 text-primary" />, label: "Knowledge", value: "247 items" },
+        { icon: <Star className="w-3 h-3 text-primary" />, label: "Accuracy", value: "96.4%" },
+        { icon: <Clock className="w-3 h-3 text-primary" />, label: "Last trained", value: "2h ago" },
+      ],
+    },
+    omnichannel: {
+      items: [
+        { icon: <Layers className="w-3 h-3 text-primary" />, label: "Channels", value: "4 active" },
+        { icon: <Mail className="w-3 h-3 text-primary" />, label: "Today", value: "48 msgs" },
+        { icon: <Clock className="w-3 h-3 text-primary" />, label: "Avg reply", value: "< 8s" },
+      ],
+    },
+    brain: {
+      items: [
+        { icon: <Brain className="w-3 h-3 text-primary" />, label: "Confidence", value: "High" },
+        { icon: <Tag className="w-3 h-3 text-primary" />, label: "Price pulled", value: "£3,500" },
+        { icon: <Clock className="w-3 h-3 text-primary" />, label: "Slot pulled", value: "Thu AM" },
+      ],
+    },
+    feedback: {
+      items: [
+        { icon: <RotateCcw className="w-3 h-3 text-primary" />, label: "Corrections", value: "11%" },
+        { icon: <Star className="w-3 h-3 text-primary" />, label: "Accuracy", value: "89%" },
+        { icon: <Brain className="w-3 h-3 text-primary" />, label: "Model ver.", value: "v3.2" },
+      ],
+    },
+  };
+
+  const data = insights[sceneId] || insights.sort;
+
+  return (
+    <div className="space-y-3">
+      <span className="font-mono-label text-muted-foreground">Insights</span>
+      {data.items.map((item, i) => (
+        <motion.div key={i} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1, ease }} className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {item.icon}
+            <span className="text-xs text-muted-foreground">{item.label}</span>
+          </div>
+          <span className="text-xs font-semibold text-foreground">{item.value}</span>
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+/* ─── Main component ─── */
 const DemoStage = () => {
   const [active, setActive] = useState(0);
+  const [selectedMsg, setSelectedMsg] = useState(0);
 
   return (
     <AnimatedSection className="py-24 md:py-32 bg-background">
@@ -180,40 +293,98 @@ const DemoStage = () => {
         </AnimatedElement>
 
         {/* Tab bar */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {demos.map((demo, i) => (
+        <div className="flex flex-wrap justify-center gap-2 mb-10">
+          {scenes.map((scene, i) => (
             <button
-              key={demo.id}
+              key={scene.id}
               onClick={() => setActive(i)}
-              className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
                 active === i
                   ? "gradient-honey text-primary-foreground shadow-md"
                   : "text-muted-foreground hover:text-foreground bg-background-alt border border-border hover:border-border-hover"
               }`}
             >
-              {demo.icon}
-              <span className="hidden sm:inline">{demo.label}</span>
+              {scene.icon}
+              <span className="hidden sm:inline">{scene.label}</span>
             </button>
           ))}
         </div>
 
-        {/* Demo content */}
+        {/* 3-pane demo */}
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-4xl mx-auto"
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.35, ease }}
+            className="max-w-6xl mx-auto"
           >
-            <div className="grid md:grid-cols-2 gap-10 items-center">
-              <div>
-                <h3 className="text-2xl font-bold text-foreground mb-3">{demos[active].title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{demos[active].description}</p>
+            {/* Scene description */}
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-foreground mb-1">{scenes[active].title}</h3>
+              <p className="text-sm text-muted-foreground">{scenes[active].description}</p>
+            </div>
+
+            {/* App chrome */}
+            <div className="rounded-2xl border border-border bg-background shadow-2xl overflow-hidden">
+              {/* Title bar */}
+              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-background-alt">
+                <div className="flex gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-destructive/50" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-primary/40" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
+                </div>
+                <span className="font-mono-label text-muted-foreground ml-2">BizzyBee Dashboard</span>
+
+                {/* AI briefing strip */}
+                <div className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-glow/30 border border-primary/10">
+                  <Sparkles className="w-3 h-3 text-primary" />
+                  <span className="text-[10px] font-medium text-primary">AI Active · 3 drafts ready</span>
+                </div>
               </div>
-              <div className="p-6 rounded-2xl border border-border bg-background-alt">
-                {demos[active].visual}
+
+              {/* 3-pane grid */}
+              <div className="grid grid-cols-1 md:grid-cols-[220px_1fr_180px] min-h-[360px]">
+                {/* Pane 1: Message list */}
+                <div className="border-r border-border bg-background-alt/50 hidden md:block">
+                  <div className="p-3">
+                    <span className="font-mono-label text-muted-foreground block mb-2">Inbox</span>
+                  </div>
+                  <div className="divide-y divide-border">
+                    {inboxMessages.map((msg, i) => (
+                      <button
+                        key={msg.id}
+                        onClick={() => setSelectedMsg(i)}
+                        className={`w-full text-left px-3 py-2.5 transition-colors ${
+                          selectedMsg === i ? "bg-primary-glow/20" : "hover:bg-background-alt"
+                        }`}
+                      >
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-muted-foreground">{channelIcon[msg.channel]}</span>
+                          <span className={`text-xs font-medium truncate ${msg.unread ? "text-foreground" : "text-muted-foreground"}`}>{msg.from}</span>
+                          <span className="font-mono-label text-muted-foreground ml-auto shrink-0" style={{ fontSize: "9px" }}>{msg.time}</span>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground truncate">{msg.subject}</p>
+                        {msg.unread && (
+                          <span className={`inline-block mt-1 text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${msg.badgeColour}`}>
+                            {msg.badge}
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Pane 2: Reading / Demo content */}
+                <div className="p-5 md:p-6 bg-background">
+                  <ReadingPane sceneId={scenes[active].id} />
+                </div>
+
+                {/* Pane 3: Insights */}
+                <div className="border-l border-border p-4 bg-background-alt/30 hidden md:block">
+                  <InsightsPane sceneId={scenes[active].id} />
+                </div>
               </div>
             </div>
           </motion.div>
