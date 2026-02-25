@@ -10,6 +10,7 @@ import WhatsAppWidget from "@/components/WhatsAppWidget";
 import ExitIntent from "@/components/ExitIntent";
 import HoneyJarProgress from "@/components/HoneyJarProgress";
 import CursorTrail from "@/components/CursorTrail";
+import HeroBee from "@/components/HeroBee";
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
@@ -27,6 +28,7 @@ const App = () => (
       <BrowserRouter>
         <CursorTrail />
         <Nav />
+        <HeroBee />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/pricing" element={<Pricing />} />
