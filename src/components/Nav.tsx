@@ -35,7 +35,7 @@ const Nav = () => {
         <Link to="/" className="flex items-center gap-2 group">
           <span className="text-2xl">🐝</span>
           <span className="text-xl font-bold text-foreground tracking-tight">
-            Bizzy<span className="text-gradient-honey">Bee</span>
+            B<span id="bee-landing-dot">i</span>zzy<span className="text-gradient-honey">Bee</span>
           </span>
         </Link>
 
