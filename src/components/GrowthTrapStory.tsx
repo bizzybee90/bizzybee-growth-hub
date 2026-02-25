@@ -1,5 +1,6 @@
 import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const stages = [
   {
@@ -39,141 +40,297 @@ const stages = [
   },
 ];
 
-// Typography feel per stage: line-height, letter-spacing, font-weight emphasis
-const typographyStyles: Record<number, React.CSSProperties> = {
-  0: { lineHeight: 1.8, letterSpacing: "0.01em" },
-  1: { lineHeight: 1.8, letterSpacing: "0.01em" },
-  2: { lineHeight: 1.5, letterSpacing: "-0.005em" },
-  3: { lineHeight: 1.3, letterSpacing: "-0.01em", fontWeight: 600 },
-  4: { lineHeight: 1.8, letterSpacing: "0.01em" },
-};
+const NOTIFICATION_ITEMS = [
+  { icon: "📧", text: "3 unread emails", x: 8, y: 15 },
+  { icon: "📞", text: "Missed call", x: 78, y: 10 },
+  { icon: "💬", text: "WhatsApp (7)", x: 5, y: 40 },
+  { icon: "⭐", text: "New review", x: 82, y: 45 },
+  { icon: "📱", text: "Facebook (4)", x: 10, y: 70 },
+  { icon: "📩", text: "Quote request", x: 75, y: 72 },
+  { icon: "🔔", text: "Reminder", x: 3, y: 55 },
+  { icon: "📋", text: "Job cancelled", x: 85, y: 28 },
+];
 
-const GrowthTrapStory = () => {
+const SPARKLE_POSITIONS = [
+  { x: 30, y: 20 }, { x: 50, y: 35 }, { x: 70, y: 25 },
+  { x: 40, y: 60 }, { x: 60, y: 50 }, { x: 25, y: 45 },
+];
+
+// ─── Desktop: pinned view that cycles through stages ───
+const PinnedGrowthTrap = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
+  const [activeStage, setActiveStage] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    setProgress(v);
+    // Stages split evenly across scroll distance
+    // 0–0.08 = intro, 0.08–0.88 = 5 stages, 0.88–1 = outro
+    if (v < 0.08) { setActiveStage(0); return; }
+    if (v > 0.88) { setActiveStage(4); return; }
+    const stageIndex = Math.min(4, Math.floor((v - 0.08) / 0.16));
+    setActiveStage(stageIndex);
+  });
+
+  // Background colour shift
   const bgColor = useTransform(
     scrollYProgress,
-    [0, 0.15, 0.35, 0.55, 0.75, 1],
+    [0, 0.15, 0.35, 0.52, 0.72, 0.9, 1],
     [
-      "hsl(40, 20%, 100%)",
-      "hsl(40, 20%, 98%)",
-      "hsl(30, 30%, 90%)",
-      "hsl(20, 44%, 12%)",
-      "hsl(25, 50%, 25%)",
-      "hsl(44, 96%, 97%)",
+      "hsl(40, 20%, 100%)",   // warm white
+      "hsl(40, 18%, 97%)",    // barely tinted
+      "hsl(30, 28%, 85%)",    // warming
+      "hsl(20, 44%, 14%)",    // deep brown (tipping point)
+      "hsl(25, 48%, 22%)",    // still dark (reversal)
+      "hsl(44, 80%, 95%)",    // sunrise
+      "hsl(44, 96%, 97%)",    // glow
     ]
   );
 
-  const textColor = useTransform(
-    scrollYProgress,
-    [0, 0.3, 0.45, 0.8, 1],
-    ["hsl(0,0%,10%)", "hsl(0,0%,10%)", "hsl(40,20%,92%)", "hsl(40,20%,92%)", "hsl(0,0%,10%)"]
-  );
+  const isDark = progress > 0.35 && progress < 0.8;
 
-  const mutedColor = useTransform(
-    scrollYProgress,
-    [0, 0.3, 0.45, 0.8, 1],
-    ["hsl(220,9%,46%)", "hsl(220,9%,46%)", "hsl(40,20%,68%)", "hsl(40,20%,68%)", "hsl(220,9%,46%)"]
-  );
-
-  // Notification clutter for stages 2-3 (scroll-linked)
-  const [notifProgress, setNotifProgress] = useState(0);
-  useMotionValueEvent(scrollYProgress, "change", (v) => setNotifProgress(v));
-
-  const showNotifs = notifProgress > 0.3 && notifProgress < 0.72;
-  const notifOpacity = showNotifs
-    ? Math.min(1, (notifProgress - 0.3) / 0.15) * (notifProgress < 0.62 ? 1 : Math.max(0, 1 - (notifProgress - 0.62) / 0.1))
+  // Notification pile-up: visible during stages 2-3 (progress ~0.35–0.72)
+  const notifVisible = progress > 0.32 && progress < 0.75;
+  const notifIntensity = notifVisible
+    ? Math.min(1, (progress - 0.32) / 0.12) * (progress < 0.65 ? 1 : Math.max(0, 1 - (progress - 0.65) / 0.1))
     : 0;
 
-  const notifications = [
-    { icon: "📧", text: "3 unread emails", pos: "top-20 left-4 md:left-12" },
-    { icon: "📞", text: "Missed call", pos: "top-32 right-4 md:right-16" },
-    { icon: "💬", text: "WhatsApp (7)", pos: "top-1/3 left-2 md:left-8" },
-    { icon: "⭐", text: "New review", pos: "bottom-1/3 right-2 md:right-10" },
-    { icon: "📱", text: "Facebook (4)", pos: "bottom-40 left-4 md:left-20" },
-    { icon: "📩", text: "Quote request", pos: "top-1/2 right-4 md:right-6" },
-  ];
+  // Bee clearing + sparkles at stage 5 (progress ~0.72–0.85)
+  const beeClearing = progress > 0.7 && progress < 0.88;
+  const sparkleOpacity = beeClearing ? Math.min(1, (progress - 0.7) / 0.06) * Math.max(0, 1 - (progress - 0.78) / 0.1) : 0;
+
+  // Typography styles per stage
+  const typo = useMemo(() => {
+    const styles: Record<number, { lineHeight: number; letterSpacing: string; fontWeight: number }> = {
+      0: { lineHeight: 1.8, letterSpacing: "0.01em", fontWeight: 400 },
+      1: { lineHeight: 1.75, letterSpacing: "0.005em", fontWeight: 400 },
+      2: { lineHeight: 1.5, letterSpacing: "-0.005em", fontWeight: 500 },
+      3: { lineHeight: 1.3, letterSpacing: "-0.01em", fontWeight: 600 },
+      4: { lineHeight: 1.8, letterSpacing: "0.01em", fontWeight: 400 },
+    };
+    return styles[activeStage] || styles[0];
+  }, [activeStage]);
+
+  const stage = stages[activeStage];
 
   return (
-    <motion.div ref={containerRef} className="relative" style={{ background: bgColor }}>
-      {/* Section header - sticky */}
-      <div className="sticky top-0 min-h-screen flex items-center justify-center z-10 pointer-events-none">
-        <div className="container mx-auto px-6">
-          <div className="max-w-2xl mx-auto text-center">
-            <motion.h2
-              className="text-2xl md:text-3xl font-bold"
-              style={{ color: textColor, opacity: useTransform(scrollYProgress, [0, 0.08, 0.12], [1, 1, 0]) }}
-            >
-              You didn't start a business to answer emails at 10pm.
-            </motion.h2>
+    <motion.div
+      ref={containerRef}
+      className="relative"
+      // 5 stages × 100vh each + extra space for intro/outro
+      style={{ height: "600vh", background: bgColor }}
+    >
+      {/* Pinned viewport */}
+      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+        {/* Section intro headline — fades out */}
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+          style={{ opacity: useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0]) }}
+        >
+          <h2
+            className="text-2xl md:text-4xl font-bold text-center px-6 max-w-2xl"
+            style={{ color: isDark ? "hsl(40,20%,92%)" : "hsl(0,0%,10%)" }}
+          >
+            You didn't start a business to answer emails at 10pm.
+          </h2>
+        </motion.div>
+
+        {/* Stage content */}
+        <div className="relative z-10 max-w-[700px] mx-auto text-center px-6">
+          {/* Stage label */}
+          <motion.span
+            key={`label-${activeStage}`}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-mono-label mb-3 inline-block"
+            style={{ color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)" }}
+          >
+            {stage.label}
+          </motion.span>
+
+          {/* Stage emoji */}
+          <motion.span
+            key={`emoji-${activeStage}`}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl mb-5 block"
+          >
+            {stage.emoji}
+          </motion.span>
+
+          {/* Stage title */}
+          <motion.h2
+            key={`title-${activeStage}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-3xl md:text-4xl font-bold mb-5"
+            style={{
+              color: isDark ? "hsl(40,20%,92%)" : "hsl(0,0%,10%)",
+              lineHeight: typo.lineHeight,
+              letterSpacing: typo.letterSpacing,
+            }}
+          >
+            {stage.title}
+          </motion.h2>
+
+          {/* Stage description */}
+          <motion.p
+            key={`desc-${activeStage}`}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-lg md:text-xl"
+            style={{
+              color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)",
+              lineHeight: typo.lineHeight,
+              letterSpacing: typo.letterSpacing,
+              fontWeight: typo.fontWeight,
+            }}
+          >
+            {stage.description}
+          </motion.p>
+
+          {/* Progress dots */}
+          <div className="flex items-center justify-center gap-2 mt-10">
+            {stages.map((_, i) => (
+              <div
+                key={i}
+                className="h-1.5 rounded-full transition-all duration-500"
+                style={{
+                  width: i === activeStage ? 32 : 8,
+                  backgroundColor: i === activeStage
+                    ? "hsl(35, 58%, 55%)"
+                    : isDark
+                      ? "hsla(40, 20%, 60%, 0.3)"
+                      : "hsla(0, 0%, 10%, 0.15)",
+                }}
+              />
+            ))}
           </div>
         </div>
-      </div>
 
-      {/* Notification clutter overlay */}
-      <div className="fixed inset-0 pointer-events-none z-20" style={{ opacity: notifOpacity }}>
-        {notifications.map((n, i) => (
-          <motion.div
+        {/* Notification pile-up */}
+        {NOTIFICATION_ITEMS.map((n, i) => (
+          <div
             key={i}
-            className={`absolute ${n.pos} bg-background/90 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2`}
-            initial={false}
-            animate={{
-              opacity: notifOpacity,
-              scale: notifOpacity > 0.5 ? 1 : 0.8,
-              y: notifOpacity > 0.5 ? 0 : 10,
+            className="absolute pointer-events-none transition-all duration-500"
+            style={{
+              left: `${n.x}%`,
+              top: `${n.y}%`,
+              opacity: notifIntensity * (i < 4 ? 1 : Math.min(1, notifIntensity * 1.5)),
+              transform: `scale(${notifIntensity > 0.5 ? 1 : 0.7}) translateY(${notifIntensity > 0.5 ? 0 : 12}px)`,
+              transitionDelay: `${i * 60}ms`,
             }}
-            transition={{ delay: i * 0.05 }}
           >
-            <span className="text-base">{n.icon}</span>
-            <span className="text-xs font-medium text-foreground whitespace-nowrap">{n.text}</span>
+            <div className="bg-background/90 backdrop-blur-sm border border-border rounded-xl px-3 py-2 shadow-lg flex items-center gap-2">
+              <span className="text-base">{n.icon}</span>
+              <span className="text-xs font-medium text-foreground whitespace-nowrap">{n.text}</span>
+            </div>
+          </div>
+        ))}
+
+        {/* Bee clearing animation */}
+        {beeClearing && (
+          <motion.div
+            className="absolute z-30 text-2xl pointer-events-none"
+            initial={{ left: "10%", top: "50%" }}
+            animate={{ left: "90%", top: "30%" }}
+            transition={{ duration: 2, ease: [0.16, 1, 0.3, 1] }}
+            style={{ opacity: sparkleOpacity > 0 ? 1 : 0 }}
+          >
+            🐝
           </motion.div>
+        )}
+
+        {/* Golden sparkles */}
+        {SPARKLE_POSITIONS.map((sp, i) => (
+          <div
+            key={`sparkle-${i}`}
+            className="absolute pointer-events-none transition-all duration-700"
+            style={{
+              left: `${sp.x}%`,
+              top: `${sp.y}%`,
+              opacity: sparkleOpacity,
+              transform: `scale(${sparkleOpacity})`,
+              transitionDelay: `${i * 80}ms`,
+            }}
+          >
+            <span className="text-primary text-lg">✦</span>
+          </div>
         ))}
       </div>
-
-      {/* Stages */}
-      {stages.map((stage, i) => (
-        <div key={i} className="min-h-screen flex items-center justify-center relative">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true, margin: "-200px" }}
-            className="max-w-[700px] mx-auto text-center px-6"
-          >
-            <span className="text-5xl mb-6 block">{stage.emoji}</span>
-            <motion.span className="font-mono-label mb-3 inline-block" style={{ color: mutedColor }}>
-              {stage.label}
-            </motion.span>
-            <motion.h2
-              className="text-3xl md:text-4xl font-bold mb-5"
-              style={{
-                color: textColor,
-                lineHeight: typographyStyles[i]?.lineHeight,
-                letterSpacing: typographyStyles[i]?.letterSpacing,
-              }}
-            >
-              {stage.title}
-            </motion.h2>
-            <motion.p
-              className="text-lg"
-              style={{
-                color: mutedColor,
-                lineHeight: typographyStyles[i]?.lineHeight,
-                letterSpacing: typographyStyles[i]?.letterSpacing,
-                fontWeight: typographyStyles[i]?.fontWeight,
-              }}
-            >
-              {stage.description}
-            </motion.p>
-          </motion.div>
-        </div>
-      ))}
     </motion.div>
   );
+};
+
+// ─── Mobile: simple stacked cards, no pinning ───
+const MobileGrowthTrap = () => (
+  <div className="py-20 px-6">
+    <h2 className="text-2xl font-bold text-foreground text-center mb-16 max-w-md mx-auto">
+      You didn't start a business to answer emails at 10pm.
+    </h2>
+    {stages.map((stage, i) => {
+      const typoMap: Record<number, React.CSSProperties> = {
+        0: { lineHeight: 1.8 },
+        1: { lineHeight: 1.75 },
+        2: { lineHeight: 1.5, fontWeight: 500 },
+        3: { lineHeight: 1.3, fontWeight: 600 },
+        4: { lineHeight: 1.8 },
+      };
+      const isDark = i === 2 || i === 3;
+      return (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-60px" }}
+          className="max-w-lg mx-auto mb-16 text-center rounded-2xl p-8"
+          style={{
+            backgroundColor: isDark ? "hsl(20, 44%, 14%)" : "hsl(40, 20%, 98%)",
+          }}
+        >
+          <span className="text-4xl mb-4 block">{stage.emoji}</span>
+          <span
+            className="font-mono-label mb-2 inline-block"
+            style={{ color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)" }}
+          >
+            {stage.label}
+          </span>
+          <h3
+            className="text-2xl font-bold mb-4"
+            style={{
+              color: isDark ? "hsl(40,20%,92%)" : "hsl(0,0%,10%)",
+              ...typoMap[i],
+            }}
+          >
+            {stage.title}
+          </h3>
+          <p
+            className="text-base"
+            style={{
+              color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)",
+              ...typoMap[i],
+            }}
+          >
+            {stage.description}
+          </p>
+        </motion.div>
+      );
+    })}
+  </div>
+);
+
+const GrowthTrapStory = () => {
+  const isMobile = useIsMobile();
+  return isMobile ? <MobileGrowthTrap /> : <PinnedGrowthTrap />;
 };
 
 export default GrowthTrapStory;
