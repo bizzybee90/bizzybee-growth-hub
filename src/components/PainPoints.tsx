@@ -1,5 +1,5 @@
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
-import { Clock, MessageSquareX, TrendingDown } from "lucide-react";
+import { MessageSquareX, Clock, TrendingDown, AlertCircle } from "lucide-react";
 
 const pains = [
   {
@@ -17,6 +17,11 @@ const pains = [
     title: "Growth that doesn't scale",
     description: "More leads should be exciting. Instead, each new customer adds more chaos to your plate.",
   },
+  {
+    icon: <AlertCircle className="w-6 h-6" />,
+    title: "Reputation at risk",
+    description: "One slow reply. One missed booking. One bad review. It only takes one to undo months of hard work.",
+  },
 ];
 
 const PainPoints = () => (
@@ -29,10 +34,10 @@ const PainPoints = () => (
         </h2>
       </AnimatedElement>
 
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
         {pains.map((pain, i) => (
           <AnimatedElement key={i} variant="scaleIn">
-            <div className="p-8 rounded-2xl border border-border bg-background hover:border-border-hover transition-colors group">
+            <div className="p-8 rounded-2xl border border-border bg-background hover:border-border-hover transition-colors group h-full">
               <div className="w-12 h-12 rounded-xl bg-primary-glow/50 flex items-center justify-center text-primary mb-5 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                 {pain.icon}
               </div>

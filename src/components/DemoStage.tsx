@@ -172,7 +172,7 @@ const DemoStage = () => {
         <AnimatedElement className="text-center mb-16">
           <span className="font-mono-label text-primary mb-3 inline-block">Interactive demos</span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            See BizzyBee in action
+            Your words. Your tone. Your prices. Just… faster.
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Six features that transform how UK service businesses handle customer communications.

@@ -6,7 +6,7 @@ const steps = [
     icon: <Upload className="w-6 h-6" />,
     step: "01",
     title: "Connect your channels",
-    description: "Link WhatsApp, Facebook, email, and your website chat in minutes. No code required.",
+    description: "Link your email, WhatsApp, and website chat in minutes. No code required.",
   },
   {
     icon: <Cpu className="w-6 h-6" />,
@@ -18,12 +18,12 @@ const steps = [
     icon: <Rocket className="w-6 h-6" />,
     step: "03",
     title: "Go live & grow",
-    description: "Your AI starts replying instantly. You review, approve, and focus on the work that matters.",
+    description: "Your AI starts drafting replies instantly. You review, approve, and focus on the work that matters.",
   },
 ];
 
 const HowItWorks = () => (
-  <AnimatedSection className="py-24 md:py-32 bg-background-alt">
+  <AnimatedSection id="how-it-works" className="py-24 md:py-32 bg-background-alt">
     <div className="container mx-auto px-6">
       <AnimatedElement className="text-center mb-16">
         <span className="font-mono-label text-primary mb-3 inline-block">How it works</span>

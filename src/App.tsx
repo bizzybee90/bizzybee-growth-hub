@@ -8,6 +8,8 @@ import Footer from "@/components/Footer";
 import StickyCTA from "@/components/StickyCTA";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
 import ExitIntent from "@/components/ExitIntent";
+import HoneyJarProgress from "@/components/HoneyJarProgress";
+import CursorTrail from "@/components/CursorTrail";
 import Index from "./pages/Index";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
@@ -23,6 +25,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <CursorTrail />
         <Nav />
         <Routes>
           <Route path="/" element={<Index />} />
@@ -36,6 +39,7 @@ const App = () => (
         <StickyCTA />
         <WhatsAppWidget />
         <ExitIntent />
+        <HoneyJarProgress />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
