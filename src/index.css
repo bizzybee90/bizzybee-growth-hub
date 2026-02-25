@@ -156,6 +156,21 @@ html.lenis, html.lenis body {
   overscroll-behavior: contain;
 }
 
+/* Bee fly-in animation */
+@keyframes bee-fly-in {
+  0% {
+    transform: translate(calc(100vw + 40px), -40px) scale(1.1);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--bee-tx), var(--bee-ty)) scale(0.9);
+    opacity: 1;
+  }
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
