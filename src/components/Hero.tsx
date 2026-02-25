@@ -1,52 +1,73 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, ChevronDown, Mail, CreditCard, Clock } from "lucide-react";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 
 const Hero = () => (
   <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
     {/* Subtle grid bg */}
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-40" />
-    
+    <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-30" />
+
     {/* Glow */}
-    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary-glow/30 blur-[120px]" />
+    <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-primary-glow/20 blur-[120px]" />
 
     <div className="container mx-auto px-6 relative z-10">
       <AnimatedSection className="max-w-4xl mx-auto text-center">
         <AnimatedElement>
-          <span className="font-mono-label text-primary mb-4 inline-block tracking-widest">
-            AI Customer Service Hub
+          <span className="inline-flex items-center gap-2 font-mono-label text-primary mb-6 px-4 py-2 rounded-full border border-primary/20 bg-primary-glow/20 tracking-widest">
+            Built for UK Service Businesses
           </span>
         </AnimatedElement>
 
         <AnimatedElement>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-foreground leading-[1.1] tracking-tight mb-6 text-balance">
-            Your customers get instant answers.{" "}
-            <span className="text-gradient-honey">You get your evenings back.</span>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-balance">
+            Your customers handled.{" "}
+            <span className="text-gradient-honey">Your evening back.</span>
           </h1>
         </AnimatedElement>
 
         <AnimatedElement>
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed">
-            BizzyBee is the AI-powered hub that handles enquiries, books jobs, and delights your customers 24/7 — built specifically for UK service businesses.
+            You do the work. We do the words. BizzyBee reads your emails, texts, and WhatsApp messages — understands what they need — and drafts replies in your voice. You just check and send.
           </p>
         </AnimatedElement>
 
         <AnimatedElement className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/pricing"
-            className="inline-flex items-center gap-2 gradient-honey text-primary-foreground px-8 py-4 rounded-lg text-base font-medium shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="inline-flex items-center gap-2 gradient-honey text-primary-foreground px-8 py-4 rounded-xl text-base font-medium shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
-            Start Free Trial <ArrowRight size={18} />
+            Start Your Free Trial <ArrowRight size={18} />
           </Link>
-          <button className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-medium group">
+          <a
+            href="#how-it-works"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-medium group"
+          >
             <span className="w-10 h-10 rounded-full border border-border flex items-center justify-center group-hover:border-primary transition-colors">
-              <Play size={14} className="ml-0.5" />
+              <ChevronDown size={16} />
             </span>
-            Watch 2-min demo
-          </button>
+            See How It Works
+          </a>
         </AnimatedElement>
 
+        {/* Trust strip */}
+        <AnimatedElement className="mt-14">
+          <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <Mail size={14} className="text-primary" /> Works with Gmail & Outlook
+            </span>
+            <span className="w-1 h-1 rounded-full bg-border hidden sm:block" />
+            <span className="inline-flex items-center gap-1.5">
+              <CreditCard size={14} className="text-primary" /> No credit card required
+            </span>
+            <span className="w-1 h-1 rounded-full bg-border hidden sm:block" />
+            <span className="inline-flex items-center gap-1.5">
+              <Clock size={14} className="text-primary" /> Set up in 15 minutes
+            </span>
+          </div>
+        </AnimatedElement>
+
+        {/* Chat preview */}
         <AnimatedElement className="mt-16">
           <div className="relative mx-auto max-w-3xl">
             <div className="rounded-2xl border border-border bg-background shadow-2xl overflow-hidden">

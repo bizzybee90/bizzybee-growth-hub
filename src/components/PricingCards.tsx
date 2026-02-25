@@ -35,10 +35,10 @@ const PricingCards = ({ showFullPage = false }: { showFullPage?: boolean }) => (
       <AnimatedElement className="text-center mb-16">
         <span className="font-mono-label text-primary mb-3 inline-block">Pricing</span>
         <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-          Simple, honest pricing
+          Less than what one missed quote costs you.
         </h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          No hidden fees. No long contracts. Start free, upgrade when you're ready.
+          No contracts. No catch. No sting.
         </p>
       </AnimatedElement>
 
@@ -71,7 +71,7 @@ const PricingCards = ({ showFullPage = false }: { showFullPage?: boolean }) => (
               </ul>
               <Link
                 to="/contact"
-                className={`inline-flex items-center justify-center gap-2 rounded-lg px-6 py-3 text-sm font-medium transition-all ${
+                className={`inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all ${
                   plan.popular
                     ? "gradient-honey text-primary-foreground shadow-md hover:shadow-lg"
                     : "border border-border text-foreground hover:border-border-hover"
