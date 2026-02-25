@@ -34,7 +34,7 @@ const Nav = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2 group">
-          <img src={logo} alt="BizzyBee" className="h-8 w-auto" id="bee-landing-dot" />
+          <img src={logo} alt="BizzyBee" className="h-8 w-auto" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">

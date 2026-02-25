@@ -21,7 +21,7 @@ const Hero = () => (
 
         <AnimatedElement>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-foreground leading-[1.08] tracking-tight mb-6 text-balance">
-            Your customers handled.{" "}
+            Your customers handle<span id="bee-landing-dot">d</span>.{" "}
             <span className="text-gradient-honey">Your evening back.</span>
           </h1>
         </AnimatedElement>
