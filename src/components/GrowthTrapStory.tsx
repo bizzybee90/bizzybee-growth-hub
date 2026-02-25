@@ -1,6 +1,46 @@
-import { motion, useScroll, useTransform, useMotionValueEvent } from "framer-motion";
-import { useRef, useState, useMemo } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { useRef, useState, useMemo, useEffect, useCallback } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+// ─── Notification pills that accumulate during dark stages ───
+const NOTIFICATION_PILLS = [
+  { icon: "📧", text: "3 new emails", x: 6, y: 18 },
+  { icon: "📞", text: "Missed call", x: 82, y: 14 },
+  { icon: "💬", text: "WhatsApp (5)", x: 4, y: 42 },
+  { icon: "📱", text: "Facebook (3)", x: 84, y: 40 },
+  { icon: "📩", text: "Quote request", x: 7, y: 68 },
+  { icon: "⭐", text: "New review", x: 80, y: 70 },
+  { icon: "🔔", text: "Reminder", x: 5, y: 85 },
+  { icon: "📋", text: "SMS (2)", x: 83, y: 84 },
+];
+
+const SPARKLE_EASE = [0.16, 1, 0.3, 1] as const;
+
+// ─── Sparkle burst when bee collects a notification ───
+const GoldenSparkle = ({ x, y }: { x: number; y: number }) => (
+  <motion.div
+    className="absolute pointer-events-none z-40"
+    style={{ left: `${x}%`, top: `${y}%` }}
+    initial={{ opacity: 1, scale: 0.5 }}
+    animate={{ opacity: 0, scale: 1.8 }}
+    exit={{ opacity: 0 }}
+    transition={{ duration: 0.6, ease: SPARKLE_EASE }}
+  >
+    <span className="text-lg" style={{ color: "hsl(44, 93%, 65%)" }}>✦</span>
+  </motion.div>
+);
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mql.matches);
+    const handler = () => setReduced(mql.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+  return reduced;
+}
 
 const stages = [
   {
@@ -42,6 +82,7 @@ const stages = [
 
 // ─── Desktop: pinned scroll storytelling ───
 const PinnedGrowthTrap = () => {
+  const reducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -51,6 +92,12 @@ const PinnedGrowthTrap = () => {
   const [activeStage, setActiveStage] = useState(0);
   const [progress, setProgress] = useState(0);
 
+  // Track which notifications the bee has collected (stage 5)
+  const [collectedSet, setCollectedSet] = useState<Set<number>>(new Set());
+  const [sparkles, setSparkles] = useState<Array<{ id: number; x: number; y: number }>>([]);
+  const sparkleIdRef = useRef(0);
+  const lastCollectedRef = useRef(-1);
+
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setProgress(v);
     if (v < 0.1) { setActiveStage(0); return; }
@@ -58,6 +105,42 @@ const PinnedGrowthTrap = () => {
     const idx = Math.min(4, Math.floor((v - 0.1) / 0.16));
     setActiveStage(idx);
   });
+
+  // Bee clearing logic: sequentially collect notifications during stage 5
+  const isClearing = activeStage === 4 && progress >= 0.74;
+  const clearProgress = isClearing ? Math.min(1, (progress - 0.74) / 0.14) : 0;
+  const numCollected = Math.min(NOTIFICATION_PILLS.length, Math.floor(clearProgress * (NOTIFICATION_PILLS.length + 0.5)));
+
+  // Fire sparkles as new pills are collected
+  useEffect(() => {
+    if (reducedMotion) return;
+    if (numCollected > lastCollectedRef.current && numCollected > 0) {
+      const idx = numCollected - 1;
+      const pill = NOTIFICATION_PILLS[idx];
+      sparkleIdRef.current += 1;
+      setSparkles((prev) => [...prev.slice(-6), { id: sparkleIdRef.current, x: pill.x, y: pill.y }]);
+      setCollectedSet((prev) => {
+        const next = new Set(prev);
+        next.add(idx);
+        return next;
+      });
+    }
+    if (numCollected < lastCollectedRef.current) {
+      // Scrolling back — reset
+      setCollectedSet(new Set());
+      setSparkles([]);
+    }
+    lastCollectedRef.current = numCollected;
+  }, [numCollected, reducedMotion]);
+
+  // Reset collected state when leaving stage 5
+  useEffect(() => {
+    if (activeStage < 4) {
+      setCollectedSet(new Set());
+      setSparkles([]);
+      lastCollectedRef.current = -1;
+    }
+  }, [activeStage]);
 
   const bgColor = useTransform(
     scrollYProgress,
@@ -74,6 +157,14 @@ const PinnedGrowthTrap = () => {
   );
 
   const isDark = progress > 0.38 && progress < 0.82;
+
+  // Notifications visible during stages 2–3 (progress ~0.38–0.74), and clearing during stage 4
+  const notifsActive = (activeStage === 2 || activeStage === 3 || activeStage === 4) && progress >= 0.38;
+  const notifFadeIn = notifsActive ? Math.min(1, (progress - 0.38) / 0.08) : 0;
+
+  // Bee position: flies to the next uncollected pill
+  const beeTargetIdx = Math.min(numCollected, NOTIFICATION_PILLS.length - 1);
+  const beeTarget = NOTIFICATION_PILLS[beeTargetIdx];
 
   const typo = useMemo(() => {
     const styles: Record<number, { lineHeight: number; letterSpacing: string; fontWeight: number }> = {
@@ -179,6 +270,75 @@ const PinnedGrowthTrap = () => {
             ))}
           </div>
         </div>
+
+        {/* ─── Notification pills (stages 2–4) ─── */}
+        {!reducedMotion && NOTIFICATION_PILLS.map((pill, i) => {
+          const isCollected = collectedSet.has(i);
+          const staggerDelay = i * 0.07;
+          const pillOpacity = isCollected ? 0 : notifFadeIn * (i < 4 ? 1 : Math.min(1, notifFadeIn * 1.4));
+
+          return (
+            <motion.div
+              key={`notif-${i}`}
+              className="absolute pointer-events-none z-20"
+              style={{ left: `${pill.x}%`, top: `${pill.y}%` }}
+              initial={{ opacity: 0, scale: 0.7, y: 12 }}
+              animate={{
+                opacity: pillOpacity,
+                scale: pillOpacity > 0.3 ? 1 : 0.7,
+                y: pillOpacity > 0.3 ? 0 : 12,
+              }}
+              transition={{
+                duration: 0.45,
+                delay: staggerDelay,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              <div
+                className="backdrop-blur-sm rounded-xl px-3 py-2 shadow-lg flex items-center gap-2"
+                style={{
+                  backgroundColor: isDark ? "hsla(20, 30%, 20%, 0.85)" : "hsla(0, 0%, 100%, 0.9)",
+                  borderWidth: 1,
+                  borderColor: isDark ? "hsla(40, 20%, 30%, 0.4)" : "hsla(220, 13%, 91%, 1)",
+                }}
+              >
+                <span className="text-sm">{pill.icon}</span>
+                <span
+                  className="text-xs font-medium whitespace-nowrap"
+                  style={{ color: isDark ? "hsl(40,20%,80%)" : "hsl(0,0%,10%)" }}
+                >
+                  {pill.text}
+                </span>
+              </div>
+            </motion.div>
+          );
+        })}
+
+        {/* ─── Bee (stage 5 clearing) ─── */}
+        {!reducedMotion && isClearing && numCollected < NOTIFICATION_PILLS.length && (
+          <motion.div
+            className="absolute z-30 pointer-events-none text-2xl"
+            animate={{
+              left: `${beeTarget.x + 2}%`,
+              top: `${beeTarget.y - 2}%`,
+            }}
+            transition={{
+              type: "spring",
+              stiffness: 120,
+              damping: 16,
+            }}
+            style={{ left: `${beeTarget.x + 2}%`, top: `${beeTarget.y - 2}%` }}
+          >
+            🐝
+          </motion.div>
+        )}
+
+        {/* ─── Golden sparkles ─── */}
+        <AnimatePresence>
+          {!reducedMotion && sparkles.map((sp) => (
+            <GoldenSparkle key={sp.id} x={sp.x} y={sp.y} />
+          ))}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
