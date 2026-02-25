@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import logo from "@/assets/logo.svg";
 
 const navLinks = [
   { label: "Features", href: "/features" },
@@ -33,10 +34,7 @@ const Nav = () => {
     >
       <div className="container mx-auto flex items-center justify-between px-6">
         <Link to="/" className="flex items-center gap-2 group">
-          <span className="text-2xl">🐝</span>
-          <span className="text-xl font-bold text-foreground tracking-tight">
-            B<span id="bee-landing-dot">i</span>zzy<span className="text-gradient-honey">Bee</span>
-          </span>
+          <img src={logo} alt="BizzyBee" className="h-8 w-auto" id="bee-landing-dot" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
