@@ -5,33 +5,38 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const stages = [
   {
     label: "The Beginning",
-    icon: "📞",
+    title: "You started with a phone and a promise",
     description:
-      "You started this business and it was your baby. Just you, doing great work. You picked up the phone every time. You replied to every message that evening. Quotes went out the same day. Customers chose you because the last company they called never got back to them — but you did. You were the one with the great reviews. The one people recommended.",
+      "Every call answered on the first ring. Every quote sent within the hour. You remembered customers' names, their dog's name, which tap leaked last winter. That personal touch was your superpower — and word spread fast.",
+    emoji: "📞",
   },
   {
     label: "The Growth",
-    icon: "📱",
+    title: "Then the enquiries started flooding in",
     description:
-      "Word spread. More customers came. More calls, more emails, more WhatsApps. You got busier and busier. That was the dream, right?\n\nBut the messages didn't grow with the work — they grew faster than it.",
+      "WhatsApp, Facebook, email, voicemail — your inbox became a war zone. You'd reply to one message and three more would land. You started losing track. The very thing you wanted — growth — was slowly burying you.",
+    emoji: "📱",
   },
   {
     label: "The Tipping Point",
-    icon: "📉",
+    title: "Growth started to break things",
     description:
-      "Now you're so busy doing the work that you can't keep up with the noise around it. Quote requests sit for two days. Missed calls go unreturned. That message from a new customer on Monday? You don't see it until Thursday.\n\nBy then, they've booked someone else — and you never even knew you lost the job.",
+      "You missed a quote on a Monday. Lost a £2,000 job on Wednesday. A loyal customer left a one-star review because you took 48 hours to reply. You weren't lazy — you were drowning. And every new enquiry made it worse.",
+    emoji: "📉",
   },
   {
     label: "The Reversal",
-    icon: "🪤",
+    title: "What if your inbox worked for you?",
     description:
-      "And suddenly… you've become the company you replaced. The one customers can't get hold of. The one with the slow replies.\n\nA customer isn't happy with a job — they message you, but you're buried in other work and you can't respond fast enough. One bad review turns into two. Your reputation starts taking hits for something that isn't your work… it's your time.\n\nThe business that was your baby starts to feel like a trap.",
+      "Imagine an AI that reads every message, understands the intent, and drafts a reply in your voice — instantly. Not a chatbot. Not a template. An assistant that actually sounds like you, knows your prices, and books jobs while you sleep.",
+    emoji: "💡",
   },
   {
     label: "The Way Out",
-    icon: "🌅",
+    title: "Meet BizzyBee",
     description:
-      "BizzyBee exists because this story shouldn't have to end that way. It gives you back the thing you lost when you got busy: time.\n\nNot by doing the work for you — by handling everything around it. The emails, the texts, the missed calls, the follow-ups. The \"just checking…\" messages. The back-and-forth.\n\nIt's like having a full office team — for less than the cost of one.\n\nYou keep doing the work you love. BizzyBee makes sure no customer ever feels ignored again.",
+      "BizzyBee gives you back 20+ hours a week. No more 10 PM email marathons. No more lost leads. Just fast, professional replies that sound like you wrote them — because the AI learned from you. Your customers get instant answers. You get your evenings back.",
+    emoji: "🌅",
   },
 ];
 
@@ -62,43 +67,44 @@ const PinnedGrowthTrap = () => {
   const [activeStage, setActiveStage] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  // Each stage gets exactly 20% of scroll. No dead zones.
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     setProgress(v);
-    setActiveStage(Math.min(4, Math.floor(v * 5)));
+    // Stages split evenly across scroll distance
+    // 0–0.08 = intro, 0.08–0.88 = 5 stages, 0.88–1 = outro
+    if (v < 0.08) { setActiveStage(0); return; }
+    if (v > 0.88) { setActiveStage(4); return; }
+    const stageIndex = Math.min(4, Math.floor((v - 0.08) / 0.16));
+    setActiveStage(stageIndex);
   });
 
-  // Background colour: warm → dark at stage 2-3 → sunrise at stage 4
+  // Background colour shift
   const bgColor = useTransform(
     scrollYProgress,
-    [0, 0.2, 0.4, 0.5, 0.6, 0.75, 0.9],
+    [0, 0.15, 0.35, 0.52, 0.72, 0.9, 1],
     [
-      "hsl(40, 20%, 98%)",
-      "hsl(40, 18%, 95%)",
-      "hsl(25, 30%, 18%)",
-      "hsl(20, 44%, 12%)",
-      "hsl(22, 42%, 14%)",
-      "hsl(40, 60%, 90%)",
-      "hsl(44, 80%, 95%)",
+      "hsl(40, 20%, 100%)",   // warm white
+      "hsl(40, 18%, 97%)",    // barely tinted
+      "hsl(30, 28%, 85%)",    // warming
+      "hsl(20, 44%, 14%)",    // deep brown (tipping point)
+      "hsl(25, 48%, 22%)",    // still dark (reversal)
+      "hsl(44, 80%, 95%)",    // sunrise
+      "hsl(44, 96%, 97%)",    // glow
     ]
   );
 
-  const isDark = progress > 0.35 && progress < 0.78;
+  const isDark = progress > 0.35 && progress < 0.8;
 
-  // Notifications visible during stages 2-3
-  const notifVisible = progress > 0.35 && progress < 0.78;
+  // Notification pile-up: visible during stages 2-3 (progress ~0.35–0.72)
+  const notifVisible = progress > 0.32 && progress < 0.75;
   const notifIntensity = notifVisible
-    ? Math.min(1, (progress - 0.35) / 0.1) *
-      (progress < 0.7 ? 1 : Math.max(0, 1 - (progress - 0.7) / 0.08))
+    ? Math.min(1, (progress - 0.32) / 0.12) * (progress < 0.65 ? 1 : Math.max(0, 1 - (progress - 0.65) / 0.1))
     : 0;
 
-  // Bee clearing + sparkles at stage 4 transition
-  const beeClearing = progress > 0.74 && progress < 0.9;
-  const sparkleOpacity = beeClearing
-    ? Math.min(1, (progress - 0.74) / 0.05) *
-      Math.max(0, 1 - (progress - 0.82) / 0.08)
-    : 0;
+  // Bee clearing + sparkles at stage 5 (progress ~0.72–0.85)
+  const beeClearing = progress > 0.7 && progress < 0.88;
+  const sparkleOpacity = beeClearing ? Math.min(1, (progress - 0.7) / 0.06) * Math.max(0, 1 - (progress - 0.78) / 0.1) : 0;
 
+  // Typography styles per stage
   const typo = useMemo(() => {
     const styles: Record<number, { lineHeight: number; letterSpacing: string; fontWeight: number }> = {
       0: { lineHeight: 1.8, letterSpacing: "0.01em", fontWeight: 400 },
@@ -112,23 +118,19 @@ const PinnedGrowthTrap = () => {
 
   const stage = stages[activeStage];
 
-  // Intro fades out completely before stage content appears
-  const introOpacity = useTransform(scrollYProgress, [0, 0.06, 0.1], [1, 0.5, 0]);
-  const introY = useTransform(scrollYProgress, [0, 0.1], [0, -40]);
-  // Stage content fades in after intro is gone
-  const stageOpacity = useTransform(scrollYProgress, [0.06, 0.12], [0, 1]);
-
   return (
     <motion.div
       ref={containerRef}
       className="relative"
-      style={{ height: "400vh", background: bgColor }}
+      // 5 stages × 100vh each + extra space for intro/outro
+      style={{ height: "600vh", background: bgColor }}
     >
+      {/* Pinned viewport */}
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
-        {/* Intro headline — fades out before stage content */}
+        {/* Section intro headline — fades out */}
         <motion.div
           className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-          style={{ opacity: introOpacity, y: introY }}
+          style={{ opacity: useTransform(scrollYProgress, [0, 0.04, 0.08], [1, 1, 0]) }}
         >
           <h2
             className="text-2xl md:text-4xl font-bold text-center px-6 max-w-2xl"
@@ -138,37 +140,53 @@ const PinnedGrowthTrap = () => {
           </h2>
         </motion.div>
 
-        {/* Stage content — fades in after intro */}
-        <motion.div
-          className="relative z-10 max-w-[700px] mx-auto text-center px-6"
-          style={{ opacity: stageOpacity }}
-        >
+        {/* Stage content */}
+        <div className="relative z-10 max-w-[700px] mx-auto text-center px-6">
+          {/* Stage label */}
           <motion.span
             key={`label-${activeStage}`}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-xs font-semibold tracking-[0.2em] uppercase mb-3 inline-block"
+            className="font-mono-label mb-3 inline-block"
             style={{ color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)" }}
           >
             {stage.label}
           </motion.span>
 
+          {/* Stage emoji */}
           <motion.span
-            key={`icon-${activeStage}`}
+            key={`emoji-${activeStage}`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="text-5xl mb-5 block"
           >
-            {stage.icon}
+            {stage.emoji}
           </motion.span>
 
+          {/* Stage title */}
+          <motion.h2
+            key={`title-${activeStage}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="text-3xl md:text-4xl font-bold mb-5"
+            style={{
+              color: isDark ? "hsl(40,20%,92%)" : "hsl(0,0%,10%)",
+              lineHeight: typo.lineHeight,
+              letterSpacing: typo.letterSpacing,
+            }}
+          >
+            {stage.title}
+          </motion.h2>
+
+          {/* Stage description */}
           <motion.p
             key={`desc-${activeStage}`}
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg md:text-xl whitespace-pre-line"
+            className="text-lg md:text-xl"
             style={{
               color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)",
               lineHeight: typo.lineHeight,
@@ -179,6 +197,7 @@ const PinnedGrowthTrap = () => {
             {stage.description}
           </motion.p>
 
+          {/* Progress dots */}
           <div className="flex items-center justify-center gap-2 mt-10">
             {stages.map((_, i) => (
               <div
@@ -195,7 +214,7 @@ const PinnedGrowthTrap = () => {
               />
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Notification pile-up */}
         {NOTIFICATION_ITEMS.map((n, i) => (
@@ -278,15 +297,24 @@ const MobileGrowthTrap = () => (
             backgroundColor: isDark ? "hsl(20, 44%, 14%)" : "hsl(40, 20%, 98%)",
           }}
         >
-          <span className="text-4xl mb-4 block">{stage.icon}</span>
+          <span className="text-4xl mb-4 block">{stage.emoji}</span>
           <span
-            className="text-xs font-semibold tracking-[0.2em] uppercase mb-2 inline-block"
+            className="font-mono-label mb-2 inline-block"
             style={{ color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)" }}
           >
             {stage.label}
           </span>
+          <h3
+            className="text-2xl font-bold mb-4"
+            style={{
+              color: isDark ? "hsl(40,20%,92%)" : "hsl(0,0%,10%)",
+              ...typoMap[i],
+            }}
+          >
+            {stage.title}
+          </h3>
           <p
-            className="text-base whitespace-pre-line"
+            className="text-base"
             style={{
               color: isDark ? "hsl(40,20%,68%)" : "hsl(220,9%,46%)",
               ...typoMap[i],
