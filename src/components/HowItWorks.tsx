@@ -55,11 +55,7 @@ const steps = [
         <br /><br />
         When a message comes in, it drafts a reply that sounds like you wrote it.
         <br /><br />
-        <span className="font-semibold text-foreground">You review.</span>
-        <br />
-        <span className="font-semibold text-foreground">You send.</span>
-        <br />
-        <span className="font-semibold text-foreground">You move on.</span>
+        <span className="font-semibold text-foreground">You review. You send. You move on.</span>
       </>
     ),
   },
