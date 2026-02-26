@@ -12,6 +12,7 @@ import HoneyJarProgress from "@/components/HoneyJarProgress";
 import CursorTrail from "@/components/CursorTrail";
 import HeroBee from "@/components/HeroBee";
 import Index from "./pages/Index";
+import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ const App = () => (
         <HeroBee />
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

@@ -26,6 +26,12 @@ const Footer = () => (
             </ul>
           </div>
           <div>
+            <h4 className="font-mono-label mb-4" style={{ color: "hsla(40, 20%, 92%, 0.35)" }}>Company</h4>
+            <ul className="space-y-3">
+              <li><Link to="/about" className="text-sm transition-colors hover:text-primary-light" style={{ color: "hsla(40, 20%, 92%, 0.6)" }}>About Us</Link></li>
+            </ul>
+          </div>
+          <div>
             <h4 className="font-mono-label mb-4" style={{ color: "hsla(40, 20%, 92%, 0.35)" }}>Legal</h4>
             <ul className="space-y-3">
               <li className="text-sm" style={{ color: "hsla(40, 20%, 92%, 0.6)" }}>Privacy Policy</li>
