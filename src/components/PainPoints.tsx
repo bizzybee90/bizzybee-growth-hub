@@ -14,8 +14,8 @@ const pains = [
   },
   {
     icon: <TrendingDown className="w-6 h-6" />,
-    title: "Growth that doesn't scale",
-    description: "More leads should be exciting. Instead, each new customer adds more chaos to your plate.",
+    title: "Growth = chaos.",
+    description: "More leads should be exciting.\nInstead, each new customer adds more chaos to your plate.",
   },
   {
     icon: <AlertCircle className="w-6 h-6" />,
