@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { Upload, Cpu, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 const steps = [
   {
@@ -108,13 +109,20 @@ const HowItWorks = () => {
           </div>
 
           {/* Content area */}
-          <AnimatedElement key={active}>
-            <div className="p-6 md:p-8 rounded-2xl bg-card border border-border/50">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="p-6 md:p-8 rounded-2xl bg-card border border-border/50"
+            >
               <p className="text-sm text-muted-foreground leading-relaxed">
                 {steps[active].description}
               </p>
-            </div>
-          </AnimatedElement>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </AnimatedSection>
