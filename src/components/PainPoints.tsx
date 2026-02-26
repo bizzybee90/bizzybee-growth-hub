@@ -1,10 +1,58 @@
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { MessageSquareX, Clock, TrendingDown, AlertCircle } from "lucide-react";
+import type { ReactNode } from "react";
 
-const pains = [
+/* Small inline honeycomb SVG – six-sided, stroke only, used as a subtle accent */
+const HoneycombAccent = () => (
+  <svg
+    width="14"
+    height="16"
+    viewBox="0 0 14 16"
+    fill="none"
+    className="inline-block ml-1.5 -mt-0.5 opacity-60"
+    aria-hidden="true"
+  >
+    <path
+      d="M7 1 L12.5 4.25 L12.5 10.75 L7 14 L1.5 10.75 L1.5 4.25 Z"
+      stroke="hsl(var(--primary))"
+      strokeWidth="1.2"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+/* Classy "money → honey" treatment:
+   The "m" is shown struck-through with a small "H" above it,
+   so it reads as "honey" while revealing it was "money". */
+const HoneyWordMark = () => (
+  <span className="relative inline-block" aria-label="honey">
+    {/* The H sits above the struck m */}
+    <span className="absolute -top-3.5 left-0 text-[0.55em] font-bold text-primary select-none leading-none">
+      H
+    </span>
+    {/* Struck-through m */}
+    <span className="line-through decoration-primary decoration-[1.5px] text-muted-foreground/50">
+      m
+    </span>
+    <span>oney</span>
+  </span>
+);
+
+interface Pain {
+  icon: ReactNode;
+  title: string | ReactNode;
+  description: string;
+}
+
+const pains: Pain[] = [
   {
     icon: <MessageSquareX className="w-6 h-6" />,
-    title: "Missed messages = missed revenue",
+    title: (
+      <>
+        Missed messages = missed <HoneyWordMark />
+        <HoneycombAccent />
+      </>
+    ),
     description: "Every unanswered enquiry is a job going to a competitor. And they're replying faster than you.",
   },
   {
