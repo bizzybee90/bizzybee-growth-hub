@@ -28,7 +28,7 @@ const Testimonials = () => (
       <AnimatedElement className="text-center mb-16">
         <span className="font-mono-label text-primary mb-3 inline-block">Testimonials</span>
         <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-          Trusted by UK service B<span className="inline-block" style={{ color: "hsl(35, 55%, 55%)", transform: "translateY(-1px)" }}>zzz</span>nesses
+          Trusted by UK service businesses
         </h2>
       </AnimatedElement>
 

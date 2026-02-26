@@ -14,12 +14,12 @@ const pains = [
   },
   {
     icon: <TrendingDown className="w-6 h-6" />,
-    title: "Growth = chaos.",
+    title: "Growth that doesn't scale",
     description: "More leads should be exciting. Instead, each new customer adds more chaos to your plate.",
   },
   {
     icon: <AlertCircle className="w-6 h-6" />,
-    title: "The buzz runs out.",
+    title: "Reputation at risk",
     description: "One slow reply. One missed booking. One bad review. It only takes one to undo months of hard work.",
   },
 ];
