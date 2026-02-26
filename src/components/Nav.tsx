@@ -4,12 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.svg";
 
-const navLinks = [
-  { label: "Features", href: "/features" },
-  { label: "Pricing", href: "/pricing" },
-  { label: "About", href: "/about" },
-  { label: "Contact", href: "/contact" },
-];
+const navLinks: { label: string; href: string }[] = [];
 
 const Nav = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -52,18 +47,12 @@ const Nav = () => {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link
-            to="/contact"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-          >
-            Log in
-          </Link>
-          <Link
-            to="/pricing"
+          <a
+            href="#pricing"
             className="inline-flex items-center justify-center rounded-lg gradient-honey px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-md hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             Start Free Trial
-          </Link>
+          </a>
         </div>
 
         <button
@@ -93,12 +82,12 @@ const Nav = () => {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/pricing"
+              <a
+                href="#pricing"
                 className="inline-flex items-center justify-center rounded-lg gradient-honey px-5 py-3 text-sm font-medium text-primary-foreground shadow-md mt-2"
               >
                 Start Free Trial
-              </Link>
+              </a>
             </div>
           </motion.div>
         )}
