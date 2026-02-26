@@ -5,20 +5,60 @@ const steps = [
   {
     icon: <Upload className="w-6 h-6" />,
     step: "01",
-    title: "Connect your channels",
-    description: "Link your email, WhatsApp, and website chat in minutes. No code required.",
+    title: "Connect your email",
+    description: (
+      <>
+        Link your Gmail or Outlook in one click.
+        <br /><br />
+        BizzyBee reads your sent emails to learn how you write — your tone, your phrasing, your sign-off.
+        <br /><br />
+        <span className="font-semibold text-foreground">It doesn't guess your voice.</span>
+        <br />
+        <span className="font-semibold text-foreground">It learns it.</span>
+      </>
+    ),
   },
   {
     icon: <Cpu className="w-6 h-6" />,
     step: "02",
-    title: "Train your AI",
-    description: "Feed BizzyBee your FAQs, price list, and booking rules. It learns your business in under an hour.",
+    title: "Learn your business",
+    description: (
+      <>
+        BizzyBee reads your website.
+        <br /><br />
+        It analyses your services, pricing, service areas, and booking process — turning your site into a structured knowledge base.
+        <br /><br />
+        It also studies your industry to understand common questions and standard answers.
+        <br /><br />
+        <span className="font-semibold text-foreground">Within minutes, it knows what you offer — and how to talk about it.</span>
+      </>
+    ),
   },
   {
     icon: <Rocket className="w-6 h-6" />,
     step: "03",
-    title: "Go live & grow",
-    description: "Your AI starts drafting replies instantly. You review, approve, and focus on the work that matters.",
+    title: "Reply with confidence",
+    description: (
+      <>
+        Now BizzyBee knows:
+        <br />
+        <span className="inline-block mt-1 ml-1">• How you write</span>
+        <br />
+        <span className="inline-block ml-1">• What you charge</span>
+        <br />
+        <span className="inline-block ml-1">• Where you work</span>
+        <br />
+        <span className="inline-block ml-1">• How your industry responds</span>
+        <br /><br />
+        When a message comes in, it drafts a reply that sounds like you wrote it.
+        <br /><br />
+        <span className="font-semibold text-foreground">You review.</span>
+        <br />
+        <span className="font-semibold text-foreground">You send.</span>
+        <br />
+        <span className="font-semibold text-foreground">You move on.</span>
+      </>
+    ),
   },
 ];
 
