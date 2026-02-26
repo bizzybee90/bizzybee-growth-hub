@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { Check, ArrowRight } from "lucide-react";
@@ -93,8 +92,8 @@ const PricingCards = ({ showFullPage = false }: { showFullPage?: boolean }) => {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  to="/contact"
+                <a
+                  href="#pricing"
                   className={`inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-medium transition-all ${
                     plan.popular
                       ? "gradient-honey text-primary-foreground shadow-md hover:shadow-lg"
@@ -102,7 +101,7 @@ const PricingCards = ({ showFullPage = false }: { showFullPage?: boolean }) => {
                   }`}
                 >
                   Start Free Trial <ArrowRight size={16} />
-                </Link>
+                </a>
               </div>
             </AnimatedElement>
           ))}
