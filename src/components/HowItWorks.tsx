@@ -132,7 +132,7 @@ const HowItWorks = () => {
           </div>
 
           {/* Content area — fixed height to prevent layout shift */}
-          <div className="relative min-h-[280px] md:min-h-[240px] rounded-2xl bg-card border border-border/50">
+          <div className="relative min-h-[340px] md:min-h-[300px] rounded-2xl bg-card border border-border/50">
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
