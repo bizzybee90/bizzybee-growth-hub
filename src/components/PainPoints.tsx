@@ -19,7 +19,7 @@ const pains = [
   },
   {
     icon: <AlertCircle className="w-6 h-6" />,
-    title: "Reputation at risk",
+    title: "The buzz runs out.",
     description: "One slow reply. One missed booking. One bad review. It only takes one to undo months of hard work.",
   },
 ];
