@@ -131,21 +131,23 @@ const HowItWorks = () => {
             ))}
           </div>
 
-          {/* Content area */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={active}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="p-6 md:p-8 rounded-2xl bg-card border border-border/50 text-center"
-            >
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-lg mx-auto">
-                {steps[active].description}
-              </p>
-            </motion.div>
-          </AnimatePresence>
+          {/* Content area — fixed height to prevent layout shift */}
+          <div className="relative min-h-[280px] md:min-h-[240px] rounded-2xl bg-card border border-border/50">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                className="absolute inset-0 p-6 md:p-8 flex items-center justify-center text-center"
+              >
+                <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
+                  {steps[active].description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </AnimatedSection>
