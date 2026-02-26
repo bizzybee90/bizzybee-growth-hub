@@ -2,37 +2,26 @@ import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { MessageSquareX, Clock, TrendingDown, AlertCircle } from "lucide-react";
 import type { ReactNode } from "react";
 
-/* Small inline honeycomb SVG – six-sided, stroke only, used as a subtle accent */
-const HoneycombAccent = () => (
-  <svg
-    width="14"
-    height="16"
-    viewBox="0 0 14 16"
-    fill="none"
-    className="inline-block ml-1.5 -mt-0.5 opacity-60"
-    aria-hidden="true"
-  >
-    <path
-      d="M7 1 L12.5 4.25 L12.5 10.75 L7 14 L1.5 10.75 L1.5 4.25 Z"
-      stroke="hsl(var(--primary))"
-      strokeWidth="1.2"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
-
 /* Classy "money → honey" treatment:
    The "m" is shown struck-through with a small "H" above it,
    so it reads as "honey" while revealing it was "money". */
 const HoneyWordMark = () => (
   <span className="relative inline-block" aria-label="honey">
-    {/* The H sits above the struck m */}
-    <span className="absolute -top-3.5 left-0 text-[0.55em] font-bold text-primary select-none leading-none">
+    {/* Gold H correction mark – slightly rotated, raised */}
+    <span
+      className="absolute -top-[0.85em] left-[0.05em] text-[0.6em] font-extrabold text-primary select-none leading-none"
+      style={{ transform: "rotate(6deg)" }}
+      aria-hidden="true"
+    >
       H
     </span>
-    {/* Struck-through m */}
-    <span className="line-through decoration-primary decoration-[1.5px] text-muted-foreground/50">
+    {/* Intentional thin black strike on just the m */}
+    <span className="relative inline-block text-foreground">
       m
+      <span
+        className="absolute left-0 right-0 top-1/2 h-[1.2px] bg-foreground pointer-events-none"
+        aria-hidden="true"
+      />
     </span>
     <span>oney</span>
   </span>
@@ -50,7 +39,6 @@ const pains: Pain[] = [
     title: (
       <>
         Missed messages = missed <HoneyWordMark />
-        <HoneycombAccent />
       </>
     ),
     description: "Every unanswered enquiry is a job going to a competitor. And they're replying faster than you.",
