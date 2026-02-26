@@ -1,5 +1,5 @@
 import Hero from "@/components/Hero";
-import GrowthTrapStory from "@/components/GrowthTrapStory";
+import GrowthTrapStory from "@/components/marketing/GrowthTrapStory";
 import PainPoints from "@/components/PainPoints";
 import HowItWorks from "@/components/HowItWorks";
 import DemoStage from "@/components/DemoStage";
