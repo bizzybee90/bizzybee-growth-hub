@@ -72,17 +72,19 @@ const HowItWorks = () => (
         </h2>
       </AnimatedElement>
 
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      <div className="flex flex-col gap-6 max-w-4xl mx-auto">
         {steps.map((step, i) => (
           <AnimatedElement key={i}>
-            <div className="relative p-8 text-center">
-              <span className="text-6xl font-bold text-primary/10 absolute top-0 right-4 select-none">
-                {step.step}
-              </span>
-              <div className="w-14 h-14 rounded-2xl gradient-honey flex items-center justify-center text-primary-foreground mb-6 mx-auto">
-                {step.icon}
+            <div className="flex flex-col md:flex-row items-start gap-6 p-6 rounded-2xl bg-card/50 border border-border/50">
+              <div className="flex items-center gap-4 md:w-64 shrink-0">
+                <div className="w-12 h-12 rounded-xl gradient-honey flex items-center justify-center text-primary-foreground shrink-0">
+                  {step.icon}
+                </div>
+                <div>
+                  <span className="font-mono-label text-primary text-xs">{step.step}</span>
+                  <h3 className="text-lg font-bold text-foreground leading-tight">{step.title}</h3>
+                </div>
               </div>
-              <h3 className="text-lg font-bold text-foreground mb-2">{step.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
             </div>
           </AnimatedElement>
