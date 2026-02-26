@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { Upload, Cpu, Rocket } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const steps = [
   {
-    icon: <Upload className="w-6 h-6" />,
+    icon: <Upload className="w-5 h-5" />,
     step: "01",
     title: "Connect your email",
     description: (
@@ -19,7 +21,7 @@ const steps = [
     ),
   },
   {
-    icon: <Cpu className="w-6 h-6" />,
+    icon: <Cpu className="w-5 h-5" />,
     step: "02",
     title: "Learn your business",
     description: (
@@ -35,7 +37,7 @@ const steps = [
     ),
   },
   {
-    icon: <Rocket className="w-6 h-6" />,
+    icon: <Rocket className="w-5 h-5" />,
     step: "03",
     title: "Reply with confidence",
     description: (
@@ -62,36 +64,61 @@ const steps = [
   },
 ];
 
-const HowItWorks = () => (
-  <AnimatedSection id="how-it-works" className="py-24 md:py-32 bg-background-alt">
-    <div className="container mx-auto px-6">
-      <AnimatedElement className="text-center mb-16">
-        <span className="font-mono-label text-primary mb-3 inline-block">How it works</span>
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-          Live in under 60 minutes
-        </h2>
-      </AnimatedElement>
+const HowItWorks = () => {
+  const [active, setActive] = useState(0);
 
-      <div className="flex flex-col gap-6 max-w-4xl mx-auto">
-        {steps.map((step, i) => (
-          <AnimatedElement key={i}>
-            <div className="flex flex-col md:flex-row items-start gap-6 p-6 rounded-2xl bg-card/50 border border-border/50">
-              <div className="flex items-center gap-4 md:w-64 shrink-0">
-                <div className="w-12 h-12 rounded-xl gradient-honey flex items-center justify-center text-primary-foreground shrink-0">
+  return (
+    <AnimatedSection id="how-it-works" className="py-24 md:py-32 bg-background-alt">
+      <div className="container mx-auto px-6">
+        <AnimatedElement className="text-center mb-12">
+          <span className="font-mono-label text-primary mb-3 inline-block">How it works</span>
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+            Live in under 60 minutes
+          </h2>
+        </AnimatedElement>
+
+        <div className="max-w-2xl mx-auto">
+          {/* Stepper row */}
+          <div className="flex items-center mb-8">
+            {steps.map((step, i) => (
+              <div key={i} className="flex items-center flex-1 last:flex-none">
+                <button
+                  onClick={() => setActive(i)}
+                  className={cn(
+                    "flex items-center gap-2.5 px-4 py-2.5 rounded-full transition-all duration-300 shrink-0 cursor-pointer",
+                    active === i
+                      ? "gradient-honey text-primary-foreground shadow-md"
+                      : "bg-card border border-border text-muted-foreground hover:border-primary/40"
+                  )}
+                >
                   {step.icon}
-                </div>
-                <div>
-                  <span className="font-mono-label text-primary text-xs">{step.step}</span>
-                  <h3 className="text-lg font-bold text-foreground leading-tight">{step.title}</h3>
-                </div>
+                  <span className="text-sm font-semibold whitespace-nowrap hidden sm:inline">{step.title}</span>
+                  <span className="text-sm font-semibold sm:hidden">{step.step}</span>
+                </button>
+                {i < steps.length - 1 && (
+                  <div className="flex-1 mx-2">
+                    <div className={cn(
+                      "h-px w-full transition-colors duration-300",
+                      i < active ? "bg-primary" : "bg-border"
+                    )} />
+                  </div>
+                )}
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
+            ))}
+          </div>
+
+          {/* Content area */}
+          <AnimatedElement key={active}>
+            <div className="p-6 md:p-8 rounded-2xl bg-card border border-border/50">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {steps[active].description}
+              </p>
             </div>
           </AnimatedElement>
-        ))}
+        </div>
       </div>
-    </div>
-  </AnimatedSection>
-);
+    </AnimatedSection>
+  );
+};
 
 export default HowItWorks;
