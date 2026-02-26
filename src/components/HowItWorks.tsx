@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { Upload, Cpu, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -67,6 +67,25 @@ const steps = [
 
 const HowItWorks = () => {
   const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval>>();
+
+  const advance = useCallback(() => {
+    setActive((prev) => (prev + 1) % steps.length);
+  }, []);
+
+  useEffect(() => {
+    if (paused) return;
+    timerRef.current = setInterval(advance, 5000);
+    return () => clearInterval(timerRef.current);
+  }, [paused, advance]);
+
+  const handleClick = (i: number) => {
+    setActive(i);
+    setPaused(true);
+    // Resume after 10s of inactivity
+    setTimeout(() => setPaused(false), 10000);
+  };
 
   return (
     <AnimatedSection id="how-it-works" className="py-24 md:py-32 bg-background-alt">
@@ -78,13 +97,17 @@ const HowItWorks = () => {
           </h2>
         </AnimatedElement>
 
-        <div className="max-w-2xl mx-auto">
+        <div
+          className="max-w-2xl mx-auto"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
           {/* Stepper row */}
-          <div className="flex items-center mb-8">
+          <div className="flex items-center justify-center mb-8">
             {steps.map((step, i) => (
               <div key={i} className="flex items-center flex-1 last:flex-none">
                 <button
-                  onClick={() => setActive(i)}
+                  onClick={() => handleClick(i)}
                   className={cn(
                     "flex items-center gap-2.5 px-4 py-2.5 rounded-full transition-all duration-300 shrink-0 cursor-pointer",
                     active === i
@@ -116,9 +139,9 @@ const HowItWorks = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.25 }}
-              className="p-6 md:p-8 rounded-2xl bg-card border border-border/50"
+              className="p-6 md:p-8 rounded-2xl bg-card border border-border/50 text-center"
             >
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-lg mx-auto">
                 {steps[active].description}
               </p>
             </motion.div>
