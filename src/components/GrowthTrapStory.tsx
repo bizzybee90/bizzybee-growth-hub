@@ -181,6 +181,7 @@ const OrganisedCard = ({ card, index }: { card: (typeof ORGANISED_CARDS)[0]; ind
 const DesktopGrowthTrap = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [visualStage, setVisualStage] = useState(-1);
+  const [showTransformed, setShowTransformed] = useState(true);
   const isLockedRef = useRef(false);
   const [isLocked, setIsLocked] = useState(false);
   const cooldownRef = useRef(false);
@@ -341,6 +342,18 @@ const DesktopGrowthTrap = () => {
     return () => window.removeEventListener("keydown", handleKey);
   }, [step]);
 
+  // ─── Auto-cycle between chaos/organized on stage 4 ───
+  useEffect(() => {
+    if (visualStage !== 4) {
+      setShowTransformed(true);
+      return;
+    }
+    const interval = setInterval(() => {
+      setShowTransformed((prev) => !prev);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [visualStage]);
+
   // ─── Cleanup on unmount ───
   useEffect(() => {
     return () => {
@@ -358,10 +371,10 @@ const DesktopGrowthTrap = () => {
   const isWayout = visualStage === 4;
   const stageData = isIntro ? null : STAGES[visualStage];
   const typo = isIntro ? TYPO_STYLES[0] : TYPO_STYLES[visualStage];
-  const bgColor = BG_COLORS[visualStage] ?? BG_COLORS[-1];
-  const textColor = TEXT_COLORS[visualStage] ?? TEXT_COLORS[-1];
-  const labelColor = LABEL_COLORS[visualStage] ?? LABEL_COLORS[-1];
-  const showNotifs = visualStage === 2 || visualStage === 3;
+  const bgColor = (isWayout && !showTransformed) ? BG_COLORS[3] : (BG_COLORS[visualStage] ?? BG_COLORS[-1]);
+  const textColor = (isWayout && !showTransformed) ? TEXT_COLORS[3] : (TEXT_COLORS[visualStage] ?? TEXT_COLORS[-1]);
+  const labelColor = (isWayout && !showTransformed) ? LABEL_COLORS[3] : (LABEL_COLORS[visualStage] ?? LABEL_COLORS[-1]);
+  const showNotifs = visualStage === 2 || visualStage === 3 || (isWayout && !showTransformed);
   const cardStage = isIntro ? -1 : visualStage;
 
   return (
@@ -376,7 +389,7 @@ const DesktopGrowthTrap = () => {
           <AnimatePresence mode="wait">
             {isIntro ? (
               <motion.div key="intro" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -30 }}
-                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} className="max-w-[480px]">
+                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} exit={{ opacity: 0, transition: { duration: 0.15 } }} className="max-w-[480px]">
                 <h2 className="font-bold" style={{ fontSize: "clamp(28px, 3vw, 38px)", color: "#1a1a1a", lineHeight: 1.2, letterSpacing: "-0.02em" }}>
                   You didn't start a business to answer emails at 10pm.
                 </h2>
@@ -386,8 +399,8 @@ const DesktopGrowthTrap = () => {
                 </div>
               </motion.div>
             ) : (
-              <motion.div key={visualStage} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -16 }}
-                transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }} className="max-w-[460px]">
+              <motion.div key={visualStage} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], exit: { duration: 0.12 } }} className="max-w-[460px]">
                 <div className="uppercase" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: labelColor, marginBottom: 16 }}>
                   {stageData!.label}
                 </div>
@@ -396,7 +409,7 @@ const DesktopGrowthTrap = () => {
                 </div>
                 {stageData!.closingLine && (
                   <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2, duration: 0.5 }}
-                    style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.85, fontWeight: 700, color: "#1a1a1a", marginTop: 20 }}>
+                    style={{ fontSize: "clamp(15px, 1.2vw, 18px)", lineHeight: 1.85, fontWeight: 700, color: textColor, marginTop: 20 }}>
                     {stageData!.closingLine}
                   </motion.div>
                 )}
@@ -417,9 +430,25 @@ const DesktopGrowthTrap = () => {
         {/* ─── RIGHT: Card visualisation ─── */}
         <div className="flex-1 flex items-center justify-center relative" style={{ padding: "0 48px" }}>
           <div className="relative w-full" style={{ maxWidth: 360, height: isWayout ? 470 : 540, transition: "height 0.8s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+            {/* Before/After cycle label */}
+            <AnimatePresence mode="wait">
+              {isWayout && (
+                <motion.div key={showTransformed ? "after" : "before"}
+                  initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-16 left-0 right-0 text-center z-10">
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase",
+                    color: showTransformed ? "#d59543" : "rgba(255,255,255,0.5)",
+                    background: showTransformed ? "rgba(213,149,67,0.08)" : "rgba(255,255,255,0.05)",
+                    padding: "4px 12px", borderRadius: 6 }}>
+                    {showTransformed ? "✨ After BizzyBee" : "Before"}
+                  </span>
+                </motion.div>
+              )}
+            </AnimatePresence>
             {/* BizzyBee header */}
             <motion.div className="absolute -top-10 left-0 right-0 flex items-center justify-between"
-              animate={{ opacity: isWayout ? 1 : 0, y: isWayout ? 0 : 8 }} transition={{ duration: 0.5, delay: 0.15 }}>
+              animate={{ opacity: isWayout && showTransformed ? 1 : 0, y: isWayout && showTransformed ? 0 : 8 }} transition={{ duration: 0.5, delay: 0.15 }}>
               <div className="flex items-center gap-1.5">
                 <span style={{ fontSize: 16 }}>🐝</span>
                 <span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a1a" }}>BizzyBee Inbox</span>
@@ -429,7 +458,7 @@ const DesktopGrowthTrap = () => {
 
             {/* Feature chips */}
             <AnimatePresence>
-              {isWayout && (
+              {isWayout && showTransformed && (
                 <motion.div className="absolute -bottom-9 left-0 right-0 flex gap-1.5 justify-center flex-wrap"
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ delay: 0.3, duration: 0.5 }}>
                   {FEATURE_CHIPS.map((f, i) => (
@@ -440,13 +469,13 @@ const DesktopGrowthTrap = () => {
             </AnimatePresence>
 
             {/* Chaotic cards */}
-            {!isWayout && MESSAGE_CARDS.map((card, i) => (
-              <ChaosCard key={card.id} card={card} transform={getCardTransform(cardStage, i)} isDark={isDark} stage={cardStage} />
+            {(!isWayout || !showTransformed) && MESSAGE_CARDS.map((card, i) => (
+              <ChaosCard key={card.id} card={card} transform={getCardTransform(isWayout ? 3 : cardStage, i)} isDark={isWayout ? true : isDark} stage={isWayout ? 3 : cardStage} />
             ))}
 
             {/* Organised cards */}
             <AnimatePresence>
-              {isWayout && ORGANISED_CARDS.map((card, i) => (
+              {isWayout && showTransformed && ORGANISED_CARDS.map((card, i) => (
                 <OrganisedCard key={card.id} card={card} index={i} />
               ))}
             </AnimatePresence>
@@ -476,7 +505,7 @@ const DesktopGrowthTrap = () => {
           )}
 
           {/* Golden glow */}
-          {isWayout && (
+          {isWayout && showTransformed && (
             <motion.div className="absolute pointer-events-none rounded-full" style={{
               top: "50%", left: "50%", width: 380, height: 380, x: "-50%", y: "-50%",
               background: "radial-gradient(circle, rgba(213,149,67,0.07) 0%, transparent 70%)",
