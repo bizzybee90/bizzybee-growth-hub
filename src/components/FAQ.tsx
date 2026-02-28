@@ -34,11 +34,19 @@ const FAQ = () => {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <AnimatedSection className="py-24 md:py-32 bg-background-alt">
+    <AnimatedSection className="py-24 md:py-32" style={{ background: "hsl(40, 20%, 98%)" }}>
       <div className="container mx-auto px-6">
-        <AnimatedElement className="text-center mb-16">
-          <span className="font-mono-label text-primary mb-3 inline-block">FAQ</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+        <AnimatedElement className="text-center mb-14">
+          <span
+            className="inline-block mb-4 uppercase"
+            style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: "hsl(35, 50%, 45%)" }}
+          >
+            FAQ
+          </span>
+          <h2
+            className="text-3xl md:text-4xl font-bold"
+            style={{ color: "hsl(220, 9%, 15%)", letterSpacing: "-0.02em" }}
+          >
             Frequently asked questions
           </h2>
         </AnimatedElement>
@@ -46,16 +54,30 @@ const FAQ = () => {
         <div className="max-w-2xl mx-auto space-y-3">
           {faqs.map((faq, i) => (
             <AnimatedElement key={i}>
-              <div className="rounded-xl border border-border bg-background overflow-hidden">
+              <div
+                style={{
+                  background: "white",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: 12,
+                  overflow: "hidden",
+                  transition: "border-color 0.3s ease",
+                  borderColor: open === i ? "hsl(35, 55%, 55%)" : "#e5e7eb",
+                }}
+              >
                 <button
                   onClick={() => setOpen(open === i ? null : i)}
                   className="w-full flex items-center justify-between p-5 text-left"
                 >
-                  <span className="text-sm font-medium text-foreground pr-4">{faq.q}</span>
+                  <span className="pr-4 font-medium" style={{ fontSize: 14, color: "hsl(220, 9%, 15%)" }}>
+                    {faq.q}
+                  </span>
                   <ChevronDown
-                    className={`w-5 h-5 text-muted-foreground shrink-0 transition-transform ${
-                      open === i ? "rotate-180" : ""
-                    }`}
+                    className="shrink-0 transition-transform"
+                    style={{
+                      width: 18, height: 18,
+                      color: "hsl(220, 9%, 55%)",
+                      transform: open === i ? "rotate(180deg)" : "rotate(0)",
+                    }}
                   />
                 </button>
                 <AnimatePresence>
@@ -67,7 +89,7 @@ const FAQ = () => {
                       transition={{ duration: 0.2 }}
                       className="overflow-hidden"
                     >
-                      <p className="px-5 pb-5 text-sm text-muted-foreground leading-relaxed">
+                      <p className="px-5 pb-5" style={{ fontSize: 13, lineHeight: 1.7, color: "hsl(220, 9%, 45%)" }}>
                         {faq.a}
                       </p>
                     </motion.div>
@@ -78,7 +100,6 @@ const FAQ = () => {
           ))}
         </div>
 
-        {/* FAQ Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

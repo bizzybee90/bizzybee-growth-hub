@@ -105,7 +105,7 @@ const InboxComparison = () => {
   const orderedEmails = displayOrder.map(i => emails[i]);
 
   return (
-    <section className="py-24 md:py-32 bg-background-alt" ref={ref}>
+    <section className="py-24 md:py-32" style={{ background: "hsl(40, 20%, 98%)" }} ref={ref}>
       <div className="container mx-auto px-6">
         {/* Header */}
         <motion.div
@@ -115,24 +115,24 @@ const InboxComparison = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <span className="font-mono-label text-primary mb-3 inline-block">Before vs After</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+          <span className="inline-block mb-4 uppercase" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: "hsl(35, 50%, 45%)" }}>Before vs After</span>
+          <h2 className="text-3xl md:text-4xl font-bold" style={{ color: "hsl(220, 9%, 15%)", letterSpacing: "-0.02em" }}>
             Your inbox, transformed
           </h2>
         </motion.div>
 
         {/* Inbox panel */}
         <div className="max-w-2xl mx-auto">
-          <div className="rounded-2xl border border-border overflow-hidden bg-background shadow-xl">
+          <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #e5e7eb", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
             {/* Toolbar */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-background-alt">
+            <div className="flex items-center justify-between px-5 py-3" style={{ borderBottom: "1px solid #e5e7eb", background: "hsl(40, 20%, 98%)" }}>
               <div className="flex items-center gap-2">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-destructive/50" />
                   <div className="w-3 h-3 rounded-full bg-primary/40" />
                   <div className="w-3 h-3 rounded-full bg-green-500/40" />
                 </div>
-                <span className="font-mono-label text-muted-foreground ml-2">Inbox</span>
+                <span className="ml-2 uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>Inbox</span>
               </div>
 
               {/* Phase indicator */}
@@ -142,7 +142,7 @@ const InboxComparison = () => {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
-                  className="font-mono-label"
+                  className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em" }}
                   style={{
                     color: phase === "chaotic"
                       ? "hsl(220, 9%, 46%)"

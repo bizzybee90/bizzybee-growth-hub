@@ -50,7 +50,7 @@ const ExitIntent = () => {
             </p>
             <Link
               to="/pricing"
-              className="inline-flex items-center gap-2 gradient-honey text-primary-foreground px-6 py-3 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2  px-6 py-3 rounded-lg text-sm font-medium shadow-md hover:shadow-lg transition-all"
               onClick={() => setShow(false)}
             >
               Start Free Trial <ArrowRight size={16} />

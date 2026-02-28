@@ -24,7 +24,7 @@ const StickyCTA = () => {
         >
           <Link
             to="/pricing"
-            className="inline-flex items-center gap-2 gradient-honey text-primary-foreground px-6 py-3 rounded-full text-sm font-medium shadow-lg animate-pulse-glow"
+            className="inline-flex items-center gap-2  px-6 py-3 rounded-full text-sm font-medium shadow-lg animate-pulse-glow"
           >
             Start Free Trial <ArrowRight size={16} />
           </Link>

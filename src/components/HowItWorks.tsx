@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { Upload, Cpu, Rocket } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 const steps = [
@@ -15,9 +14,9 @@ const steps = [
         <br /><br />
         BizzyBee reads your sent emails to learn how you write — your tone, your phrasing, your sign-off.
         <br /><br />
-        <span className="font-semibold text-foreground">It doesn't guess your voice.</span>
+        <span style={{ fontWeight: 600, color: "hsl(220, 9%, 15%)" }}>It doesn't guess your voice.</span>
         <br />
-        <span className="font-semibold text-foreground">It learns it.</span>
+        <span style={{ fontWeight: 600, color: "hsl(220, 9%, 15%)" }}>It learns it.</span>
       </>
     ),
   },
@@ -33,7 +32,7 @@ const steps = [
         <br /><br />
         It also studies your industry to understand common questions and standard answers.
         <br /><br />
-        <span className="font-semibold text-foreground">Within minutes, it knows what you offer — and how to talk about it.</span>
+        <span style={{ fontWeight: 600, color: "hsl(220, 9%, 15%)" }}>Within minutes, it knows what you offer — and how to talk about it.</span>
       </>
     ),
   },
@@ -55,7 +54,7 @@ const steps = [
         <br /><br />
         When a message comes in, it drafts a reply that sounds like you wrote it.
         <br /><br />
-        <span className="font-semibold text-foreground">You review. You send. You move on.</span>
+        <span style={{ fontWeight: 600, color: "hsl(220, 9%, 15%)" }}>You review. You send. You move on.</span>
       </>
     ),
   },
@@ -79,16 +78,23 @@ const HowItWorks = () => {
   const handleClick = (i: number) => {
     setActive(i);
     setPaused(true);
-    // Resume after 10s of inactivity
     setTimeout(() => setPaused(false), 10000);
   };
 
   return (
-    <AnimatedSection id="how-it-works" className="py-24 md:py-32 bg-background-alt">
+    <AnimatedSection id="how-it-works" className="py-24 md:py-32" style={{ background: "hsl(40, 30%, 99%)" }}>
       <div className="container mx-auto px-6">
         <AnimatedElement className="text-center mb-12">
-          <span className="font-mono-label text-primary mb-3 inline-block">How it works</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+          <span
+            className="inline-block mb-4 uppercase"
+            style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: "hsl(35, 50%, 45%)" }}
+          >
+            How it works
+          </span>
+          <h2
+            className="text-3xl md:text-4xl font-bold"
+            style={{ color: "hsl(220, 9%, 15%)", letterSpacing: "-0.02em" }}
+          >
             Live in under 60 minutes
           </h2>
         </AnimatedElement>
@@ -104,12 +110,13 @@ const HowItWorks = () => {
               <div key={i} className="flex items-center flex-1 last:flex-none">
                 <button
                   onClick={() => handleClick(i)}
-                  className={cn(
-                    "flex items-center gap-2.5 px-4 py-2.5 rounded-full transition-all duration-300 shrink-0 cursor-pointer",
-                    active === i
-                      ? "gradient-honey text-primary-foreground shadow-md"
-                      : "bg-card border border-border text-muted-foreground hover:border-primary/40"
-                  )}
+                  className="flex items-center gap-2.5 px-4 py-2.5 rounded-full transition-all duration-300 shrink-0 cursor-pointer"
+                  style={{
+                    background: active === i ? "hsl(35, 55%, 55%)" : "white",
+                    color: active === i ? "white" : "hsl(220, 9%, 45%)",
+                    border: active === i ? "1px solid transparent" : "1px solid #e5e7eb",
+                    boxShadow: active === i ? "0 2px 8px rgba(213,149,67,0.2)" : "none",
+                  }}
                 >
                   {step.icon}
                   <span className="text-sm font-semibold whitespace-nowrap hidden sm:inline">{step.title}</span>
@@ -117,18 +124,21 @@ const HowItWorks = () => {
                 </button>
                 {i < steps.length - 1 && (
                   <div className="flex-1 mx-2">
-                    <div className={cn(
-                      "h-px w-full transition-colors duration-300",
-                      i < active ? "bg-primary" : "bg-border"
-                    )} />
+                    <div
+                      className="h-px w-full transition-colors duration-300"
+                      style={{ background: i < active ? "hsl(35, 55%, 55%)" : "#e5e7eb" }}
+                    />
                   </div>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Content area — fixed height to prevent layout shift */}
-          <div className="relative min-h-[340px] md:min-h-[300px] rounded-2xl bg-card border border-border/50">
+          {/* Content area */}
+          <div
+            className="relative min-h-[340px] md:min-h-[300px]"
+            style={{ background: "white", border: "1px solid #e5e7eb", borderRadius: 14, boxShadow: "0 1px 3px rgba(0,0,0,0.03)" }}
+          >
             <AnimatePresence mode="wait">
               <motion.div
                 key={active}
@@ -138,7 +148,7 @@ const HowItWorks = () => {
                 transition={{ duration: 0.25 }}
                 className="absolute inset-0 p-6 md:p-8 flex items-center justify-center text-center"
               >
-                <p className="text-sm text-muted-foreground leading-relaxed max-w-lg">
+                <p style={{ fontSize: 14, lineHeight: 1.75, color: "hsl(220, 9%, 45%)", maxWidth: 480 }}>
                   {steps[active].description}
                 </p>
               </motion.div>

@@ -1,54 +1,77 @@
+import { motion } from "framer-motion";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
-import { Star } from "lucide-react";
-
-const testimonials = [
-  {
-    quote: "BizzyBee changed everything. I used to spend 3 hours a night replying to enquiries. Now my AI handles 90% of them and my bookings have doubled.",
-    name: "James T.",
-    role: "Plumbing & Heating, Surrey",
-    rating: 5,
-  },
-  {
-    quote: "The AI sounds exactly like me. Customers can't tell the difference. I've gone from missing leads to converting them in minutes — even at 2 AM.",
-    name: "Sarah M.",
-    role: "Dog Grooming, Bristol",
-    rating: 5,
-  },
-  {
-    quote: "Set-up took about 45 minutes. That evening, BizzyBee booked three jobs while I was at my daughter's football match. Absolute game-changer.",
-    name: "David R.",
-    role: "Electrical Services, Manchester",
-    rating: 5,
-  },
-];
 
 const Testimonials = () => (
-  <AnimatedSection className="py-24 md:py-32 bg-background">
+  <AnimatedSection className="py-24 md:py-32" style={{ background: "hsl(40, 30%, 99%)" }}>
     <div className="container mx-auto px-6">
-      <AnimatedElement className="text-center mb-16">
-        <span className="font-mono-label text-primary mb-3 inline-block">Testimonials</span>
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground">
-          Trusted by UK service businesses
-        </h2>
-      </AnimatedElement>
+      <div className="max-w-3xl mx-auto text-center">
+        <AnimatedElement>
+          <span
+            className="inline-block mb-6 uppercase"
+            style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: "hsl(35, 50%, 45%)" }}
+          >
+            From the founder
+          </span>
+        </AnimatedElement>
 
-      <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-        {testimonials.map((t, i) => (
-          <AnimatedElement key={i} variant="scaleIn">
-            <div className="p-8 rounded-2xl border border-border bg-background hover:border-border-hover transition-colors h-full flex flex-col">
-              <div className="flex gap-1 mb-4">
-                {Array.from({ length: t.rating }).map((_, j) => (
-                  <Star key={j} className="w-4 h-4 fill-primary text-primary" />
-                ))}
-              </div>
-              <p className="text-sm text-foreground leading-relaxed mb-6 flex-1">"{t.quote}"</p>
-              <div>
-                <span className="text-sm font-bold text-foreground block">{t.name}</span>
-                <span className="font-mono-label text-muted-foreground">{t.role}</span>
-              </div>
+        <AnimatedElement>
+          <blockquote>
+            <p
+              className="text-balance"
+              style={{
+                fontSize: "clamp(18px, 2vw, 24px)",
+                lineHeight: 1.7,
+                fontWeight: 400,
+                color: "hsl(220, 9%, 25%)",
+                fontStyle: "italic",
+              }}
+            >
+              "I built BizzyBee because I lived this story myself. Running a window cleaning business
+              with 840 customers, I was drowning in messages every evening. The irony? The busier I got,
+              the worse my customer service became. I knew AI could fix this — not by replacing me,
+              but by giving me my evenings back."
+            </p>
+          </blockquote>
+        </AnimatedElement>
+
+        <AnimatedElement>
+          <div className="mt-8 flex items-center justify-center gap-3">
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center"
+              style={{ background: "hsl(35, 55%, 55%)", color: "white", fontSize: 14, fontWeight: 700 }}
+            >
+              MC
             </div>
-          </AnimatedElement>
-        ))}
+            <div className="text-left">
+              <span className="block text-sm font-semibold" style={{ color: "hsl(220, 9%, 20%)" }}>
+                Michael Cooper
+              </span>
+              <span
+                className="block uppercase"
+                style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}
+              >
+                Founder, BizzyBee
+              </span>
+            </div>
+          </div>
+        </AnimatedElement>
+
+        <AnimatedElement>
+          <div
+            className="mt-10 flex items-center justify-center gap-6 flex-wrap"
+            style={{ fontSize: 12, fontWeight: 500, color: "hsl(220, 9%, 55%)" }}
+          >
+            <span className="flex items-center gap-1.5">
+              <span style={{ color: "hsl(35, 55%, 55%)" }}>✦</span> 840 customers managed
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span style={{ color: "hsl(35, 55%, 55%)" }}>✦</span> Built for real trades businesses
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span style={{ color: "hsl(35, 55%, 55%)" }}>✦</span> UK-based & GDPR compliant
+            </span>
+          </div>
+        </AnimatedElement>
       </div>
     </div>
   </AnimatedSection>

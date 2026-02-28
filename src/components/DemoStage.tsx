@@ -93,7 +93,7 @@ const ReadingPane = ({ sceneId }: { sceneId: string }) => {
           <div className="mt-4 p-3 rounded-xl bg-primary-glow/30 border border-primary/10">
             <div className="flex items-center gap-1.5 mb-1">
               <Sparkles className="w-3 h-3 text-primary" />
-              <span className="font-mono-label text-primary">AI briefing</span>
+              <span className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(35, 55%, 55%)" }}>AI briefing</span>
             </div>
             <p className="text-xs text-foreground/70">Repeat follow-up — customer waiting 2 days for a leaking tap fix. Suggest priority slot tomorrow.</p>
           </div>
@@ -104,7 +104,7 @@ const ReadingPane = ({ sceneId }: { sceneId: string }) => {
         <div className="space-y-3">
           <div className="flex gap-2 mb-3">
             <button onClick={() => setVoiceMode("generic")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${voiceMode === "generic" ? "bg-muted/20 text-foreground border border-border" : "text-muted-foreground"}`}>Generic</button>
-            <button onClick={() => setVoiceMode("yours")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${voiceMode === "yours" ? "gradient-honey text-primary-foreground" : "text-muted-foreground"}`}>Your voice</button>
+            <button onClick={() => setVoiceMode("yours")} className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all ${voiceMode === "yours" ? "text-white" : "text-muted-foreground"}`}>Your voice</button>
           </div>
           <AnimatePresence mode="wait">
             <motion.div key={voiceMode} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3, ease }}>
@@ -132,7 +132,7 @@ const ReadingPane = ({ sceneId }: { sceneId: string }) => {
           ].map((item, i) => (
             <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-border bg-background">
               <div>
-                <span className="font-mono-label text-muted-foreground block">{item.label}</span>
+                <span className="uppercase block" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>{item.label}</span>
                 <span className="text-sm text-foreground">{item.value}</span>
               </div>
               <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${item.done ? "bg-emerald-50 text-emerald-600" : "bg-primary-glow text-primary"}`}>
@@ -155,7 +155,7 @@ const ReadingPane = ({ sceneId }: { sceneId: string }) => {
               <div className={`w-2.5 h-2.5 rounded-full ${c.colour} mx-auto mb-2`} />
               <span className="text-xs font-medium text-foreground block">{c.ch}</span>
               <span className="text-xl font-bold text-foreground">{c.count}</span>
-              <span className="font-mono-label text-muted-foreground block">messages</span>
+              <span className="uppercase block" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>messages</span>
             </motion.div>
           ))}
         </div>
@@ -186,15 +186,15 @@ const ReadingPane = ({ sceneId }: { sceneId: string }) => {
         <div className="space-y-3">
           <div className="p-3 rounded-xl border border-border bg-background">
             <div className="flex items-center justify-between mb-2">
-              <span className="font-mono-label text-muted-foreground">This week's learning</span>
+              <span className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>This week's learning</span>
               <span className="text-[10px] text-emerald-600 font-medium">↑ 4.2% accuracy</span>
             </div>
             <div className="w-full bg-muted/10 rounded-full h-1.5">
               <div className="bg-emerald-500 rounded-full h-1.5" style={{ width: "89%" }} />
             </div>
             <div className="flex justify-between mt-1.5">
-              <span className="font-mono-label text-muted-foreground">89% approved</span>
-              <span className="font-mono-label text-muted-foreground">11% corrected</span>
+              <span className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>89% approved</span>
+              <span className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>11% corrected</span>
             </div>
           </div>
           <div className="flex gap-2">
@@ -260,7 +260,7 @@ const InsightsPane = ({ sceneId }: { sceneId: string }) => {
 
   return (
     <div className="space-y-3">
-      <span className="font-mono-label text-muted-foreground">Insights</span>
+      <span className="uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>Insights</span>
       {data.items.map((item, i) => (
         <motion.div key={i} initial={{ opacity: 0, x: 8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.1, ease }} className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -280,14 +280,14 @@ const DemoStage = () => {
   const [selectedMsg, setSelectedMsg] = useState(0);
 
   return (
-    <AnimatedSection className="py-24 md:py-32 bg-background">
+    <AnimatedSection className="py-24 md:py-32" style={{ background: "hsl(40, 30%, 99%)" }}>
       <div className="container mx-auto px-6">
         <AnimatedElement className="text-center mb-16">
-          <span className="font-mono-label text-primary mb-3 inline-block">Interactive demos</span>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <span className="inline-block mb-4 uppercase" style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.2em", color: "hsl(35, 50%, 45%)" }}>Interactive demos</span>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" style={{ color: "hsl(220, 9%, 15%)", letterSpacing: "-0.02em" }}>
             Your words. Your tone. Your prices. Just… faster.
           </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto">
+          <p style={{ color: "hsl(220, 9%, 50%)", maxWidth: 480 }} className="mx-auto">
             Six features that transform how UK service businesses handle customer communications.
           </p>
         </AnimatedElement>
@@ -300,7 +300,7 @@ const DemoStage = () => {
               onClick={() => setActive(i)}
               className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
                 active === i
-                  ? "gradient-honey text-primary-foreground shadow-md"
+                  ? ""
                   : "text-muted-foreground hover:text-foreground bg-background-alt border border-border hover:border-border-hover"
               }`}
             >
@@ -327,18 +327,18 @@ const DemoStage = () => {
             </div>
 
             {/* App chrome */}
-            <div className="rounded-2xl border border-border bg-background shadow-2xl overflow-hidden">
+            <div className="rounded-2xl overflow-hidden" style={{ background: "white", border: "1px solid #e5e7eb", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}>
               {/* Title bar */}
-              <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border bg-background-alt">
+              <div className="flex items-center gap-2 px-4 py-2.5" style={{ borderBottom: "1px solid #e5e7eb", background: "hsl(40, 20%, 98%)" }}>
                 <div className="flex gap-1.5">
                   <div className="w-2.5 h-2.5 rounded-full bg-destructive/50" />
                   <div className="w-2.5 h-2.5 rounded-full bg-primary/40" />
                   <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
                 </div>
-                <span className="font-mono-label text-muted-foreground ml-2">BizzyBee Dashboard</span>
+                <span className="ml-2 uppercase" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>BizzyBee Dashboard</span>
 
                 {/* AI briefing strip */}
-                <div className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary-glow/30 border border-primary/10">
+                <div className="ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-lg" style={{ background: "rgba(213,149,67,0.08)", border: "1px solid rgba(213,149,67,0.12)" }}>
                   <Sparkles className="w-3 h-3 text-primary" />
                   <span className="text-[10px] font-medium text-primary">AI Active · 3 drafts ready</span>
                 </div>
@@ -349,7 +349,7 @@ const DemoStage = () => {
                 {/* Pane 1: Message list */}
                 <div className="border-r border-border bg-background-alt/50 hidden md:block">
                   <div className="p-3">
-                    <span className="font-mono-label text-muted-foreground block mb-2">Inbox</span>
+                    <span className="uppercase block mb-2" style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.1em", color: "hsl(220, 9%, 55%)" }}>Inbox</span>
                   </div>
                   <div className="divide-y divide-border">
                     {inboxMessages.map((msg, i) => (
@@ -363,7 +363,7 @@ const DemoStage = () => {
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <span className="text-muted-foreground">{channelIcon[msg.channel]}</span>
                           <span className={`text-xs font-medium truncate ${msg.unread ? "text-foreground" : "text-muted-foreground"}`}>{msg.from}</span>
-                          <span className="font-mono-label text-muted-foreground ml-auto shrink-0" style={{ fontSize: "9px" }}>{msg.time}</span>
+                          <span className="uppercase ml-auto shrink-0" style={{ letterSpacing: "0.05em", color: "hsl(220, 9%, 55%)" }} style={{ fontSize: "9px" }}>{msg.time}</span>
                         </div>
                         <p className="text-[11px] text-muted-foreground truncate">{msg.subject}</p>
                         {msg.unread && (
