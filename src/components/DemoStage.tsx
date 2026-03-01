@@ -64,11 +64,11 @@ const scenes: DemoScene[] = [
 
 /* ─── Inbox message list data ─── */
 const inboxMessages = [
-  { id: 1, from: "Sarah M.", subject: "Re: Tap still dripping", channel: "email" as const, time: "2m", badge: "🔥 Urgent", badgeColour: "bg-red-50 text-red-600 border-red-100", unread: true },
-  { id: 2, from: "James K.", subject: "Quote for bathroom refit", channel: "whatsapp" as const, time: "8m", badge: "💰 Quote", badgeColour: "bg-amber-50 text-amber-700 border-amber-100", unread: true },
-  { id: 3, from: "+44 7911…", subject: "Emergency — tomorrow AM?", channel: "whatsapp" as const, time: "15m", badge: "📅 Booking", badgeColour: "bg-emerald-50 text-emerald-700 border-emerald-100", unread: true },
-  { id: 4, from: "Checkatrade", subject: "New lead in your area", channel: "email" as const, time: "1h", badge: "💰 Quote", badgeColour: "bg-amber-50 text-amber-700 border-amber-100", unread: false },
-  { id: 5, from: "David T.", subject: "Thanks for last week", channel: "sms" as const, time: "2h", badge: "ℹ️ Info", badgeColour: "bg-muted/20 text-muted-foreground border-border", unread: false },
+  { id: 1, from: "Sarah M.", subject: "Re: Tap still dripping", channel: "email" as const, time: "2m", badge: "🔥 Urgent", badgeStyle: { background: "rgba(255, 59, 48, 0.08)", color: "#FF3B30", border: "1px solid rgba(255, 59, 48, 0.12)" }, unread: true },
+  { id: 2, from: "James K.", subject: "Quote for bathroom refit", channel: "whatsapp" as const, time: "8m", badge: "💰 Quote", badgeStyle: { background: "rgba(52, 199, 89, 0.08)", color: "#34C759", border: "1px solid rgba(52, 199, 89, 0.12)" }, unread: true },
+  { id: 3, from: "+44 7911…", subject: "Emergency — tomorrow AM?", channel: "whatsapp" as const, time: "15m", badge: "📅 Booking", badgeStyle: { background: "rgba(175, 82, 222, 0.08)", color: "#AF52DE", border: "1px solid rgba(175, 82, 222, 0.12)" }, unread: true },
+  { id: 4, from: "Checkatrade", subject: "New lead in your area", channel: "email" as const, time: "1h", badge: "💰 Quote", badgeStyle: { background: "rgba(52, 199, 89, 0.08)", color: "#34C759", border: "1px solid rgba(52, 199, 89, 0.12)" }, unread: false },
+  { id: 5, from: "David T.", subject: "Thanks for last week", channel: "sms" as const, time: "2h", badge: "ℹ️ Info", badgeStyle: { background: "rgba(0, 0, 0, 0.03)", color: "var(--text-secondary)", border: "1px solid rgba(0, 0, 0, 0.06)" }, unread: false },
 ];
 
 const channelIcon = {
@@ -87,7 +87,7 @@ const ReadingPane = ({ sceneId }: { sceneId: string }) => {
         <div className="space-y-3">
           <div className="flex items-center gap-2 mb-4">
             <span className="text-sm font-semibold text-foreground">Sarah M.</span>
-            <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border bg-red-50 text-red-600 border-red-100">Urgent</span>
+            <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: "rgba(255, 59, 48, 0.08)", color: "#FF3B30", border: "1px solid rgba(255, 59, 48, 0.12)" }}>Urgent</span>
           </div>
           <p className="text-sm text-foreground/80 leading-relaxed">"Hi, just following up again on the tap. It's been two days now and the dripping's got worse. Could you pop over this week?"</p>
           <div className="mt-4 p-3 rounded-xl bg-primary-glow/30 border border-primary/10">
@@ -322,7 +322,7 @@ const DemoStage = () => {
           >
             {/* Scene description */}
             <div className="text-center mb-6">
-              <h3 className="text-xl font-bold text-foreground mb-1">{scenes[active].title}</h3>
+              <h3 className="text-xl font-bold text-foreground mb-1" style={{ letterSpacing: "-0.01em" }}>{scenes[active].title}</h3>
               <p className="text-sm text-muted-foreground">{scenes[active].description}</p>
             </div>
 
@@ -363,11 +363,11 @@ const DemoStage = () => {
                         <div className="flex items-center gap-1.5 mb-0.5">
                           <span className="text-muted-foreground">{channelIcon[msg.channel]}</span>
                           <span className={`text-xs font-medium truncate ${msg.unread ? "text-foreground" : "text-muted-foreground"}`}>{msg.from}</span>
-                          <span className="uppercase ml-auto shrink-0" style={{ letterSpacing: "0.05em", color: "hsl(220, 9%, 55%)" }} style={{ fontSize: "9px" }}>{msg.time}</span>
+                          <span className="uppercase ml-auto shrink-0" style={{ letterSpacing: "0.05em", color: "var(--text-secondary)", fontSize: "9px" }}>{msg.time}</span>
                         </div>
                         <p className="text-[11px] text-muted-foreground truncate">{msg.subject}</p>
                         {msg.unread && (
-                          <span className={`inline-block mt-1 text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full border ${msg.badgeColour}`}>
+                          <span className="inline-block mt-1 text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded-full" style={msg.badgeStyle}>
                             {msg.badge}
                           </span>
                         )}

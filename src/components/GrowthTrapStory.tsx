@@ -19,9 +19,9 @@ const MESSAGE_CARDS = [
 
 // ─── BizzyBee organised inbox ───
 const ORGANISED_CARDS = [
-  { id: 1, label: "Hot Lead", summary: "Sarah wants a quote for a 3-bed in Luton. Asked twice — seems frustrated.", status: "Draft reply ready", color: "#ef4444" },
-  { id: 2, label: "Emergency", summary: "Jim has a kitchen leak. Needs same-day visit.", status: "Draft reply ready", color: "#f97316" },
-  { id: 5, label: "Complaint", summary: "Karen's been waiting 3 days. Needs immediate attention.", status: "Apology drafted", color: "#ef4444" },
+  { id: 1, label: "Hot Lead", summary: "Sarah wants a quote for a 3-bed in Luton. Asked twice — seems frustrated.", status: "Draft reply ready", color: "#FF3B30" },
+  { id: 2, label: "Emergency", summary: "Jim has a kitchen leak. Needs same-day visit.", status: "Draft reply ready", color: "#FF9500" },
+  { id: 5, label: "Complaint", summary: "Karen's been waiting 3 days. Needs immediate attention.", status: "Apology drafted", color: "#FF3B30" },
   { id: 3, label: "Booking", summary: "Thursday → Friday reschedule request.", status: "Auto-handled ✓", color: "#eab308" },
   { id: 9, label: "Enquiry", summary: "Lisa sent a photo of a tap for assessment.", status: "Draft reply ready", color: "#eab308" },
   { id: 6, label: "Voicemail", summary: "New enquiry from Google — MK area, wants a quote.", status: "Draft reply ready", color: "#6b7280" },
@@ -128,7 +128,7 @@ const ChaosCard = ({ card, transform, isDark, stage }: { card: (typeof MESSAGE_C
         boxShadow: isDark ? "0 2px 12px rgba(0,0,0,0.3)" : "0 1px 3px rgba(0,0,0,0.04)",
         backdropFilter: isDark ? "blur(8px)" : "none",
       }}>
-        {showBadge && <div className="absolute -top-1.5 -right-1.5 uppercase" style={{ background: "#ef4444", color: "white", fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 5, letterSpacing: "0.05em" }}>URGENT</div>}
+        {showBadge && <div className="absolute -top-1.5 -right-1.5 uppercase" style={{ background: "#FF3B30", color: "white", fontSize: 8, fontWeight: 700, padding: "2px 5px", borderRadius: 5, letterSpacing: "0.05em" }}>URGENT</div>}
         {showDot && <div className="absolute rounded-full" style={{ top: 10, right: 10, width: 7, height: 7, background: "#d59543" }} />}
         <div className="flex items-center gap-1.5 mb-0.5">
           <span style={{ fontSize: 12 }}>{CHANNEL_ICONS[card.type] || "📧"}</span>
@@ -521,7 +521,7 @@ const DesktopGrowthTrap = () => {
 // ─── MOBILE: Stacked cards, no scroll hijack ───
 const MobileGrowthTrap = () => (
   <div className="py-16 px-5">
-    <h2 className="text-2xl font-bold text-center mb-12 max-w-sm mx-auto" style={{ color: "#1a1a1a" }}>
+    <h2 className="text-2xl font-bold text-center mb-12 max-w-sm mx-auto" style={{ color: "#1a1a1a", letterSpacing: "-0.015em" }}>
       You didn't start a business to answer emails at 10pm.
     </h2>
     {STAGES.map((stage, i) => {

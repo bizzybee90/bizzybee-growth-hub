@@ -23,9 +23,14 @@ const Nav = () => {
  <motion.header
  className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
  scrolled
- ? "py-2 bg-background/90 backdrop-blur-xl border-b border-border shadow-sm"
+ ? "py-2 border-b border-border shadow-sm"
  : "py-4 bg-transparent"
  }`}
+ style={scrolled ? {
+ background: "rgba(255, 255, 255, 0.72)",
+ backdropFilter: "saturate(180%) blur(20px)",
+ WebkitBackdropFilter: "saturate(180%) blur(20px)",
+ } : undefined}
  >
  <div className="container mx-auto flex items-center justify-between px-6">
  <Link to="/" className="flex items-center gap-2 group">
@@ -55,7 +60,8 @@ const Nav = () => {
  </a>
  <a
  href="#pricing"
- className="inline-flex items-center justify-center rounded-lg px-5 py-2.5 text-sm font-medium hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+ className="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium hover:shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]"
+ style={{ background: "var(--accent-primary)", color: "white", borderRadius: "var(--radius-pill)", boxShadow: "var(--shadow-card)" }}
  >
  Start Free Trial
  </a>
@@ -90,7 +96,7 @@ const Nav = () => {
  ))}
  <a
  href="#pricing"
- className="inline-flex items-center justify-center rounded-lg px-5 py-3 text-sm font-medium mt-2" style={{ background: "hsl(35, 55%, 55%)", color: "white", boxShadow: "0 2px 8px rgba(213,149,67,0.2)" }}
+ className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium mt-2" style={{ background: "var(--accent-primary)", color: "white", borderRadius: "var(--radius-pill)", boxShadow: "var(--shadow-card)" }}
  >
  Start Free Trial
  </a>

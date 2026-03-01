@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 
 type Email = {
@@ -12,12 +12,12 @@ type Email = {
   sortOrder: number;
 };
 
-const PRIORITY_CONFIG: Record<Email["priority"], { label: string; className: string }> = {
-  urgent:     { label: "Urgent",    className: "bg-red-100 text-red-700 border-red-200" },
-  booking:    { label: "Booking",   className: "bg-emerald-100 text-emerald-700 border-emerald-200" },
-  quote:      { label: "Quote",     className: "bg-amber-100 text-amber-700 border-amber-200" },
-  "follow-up":{ label: "Follow-up", className: "bg-blue-100 text-blue-700 border-blue-200" },
-  info:       { label: "Info",      className: "bg-gray-100 text-gray-600 border-gray-200" },
+const PRIORITY_CONFIG: Record<Email["priority"], { label: string; style: React.CSSProperties }> = {
+  urgent:     { label: "Urgent",    style: { background: "rgba(255, 59, 48, 0.08)", color: "#FF3B30", border: "1px solid rgba(255, 59, 48, 0.12)" } },
+  booking:    { label: "Booking",   style: { background: "rgba(175, 82, 222, 0.08)", color: "#AF52DE", border: "1px solid rgba(175, 82, 222, 0.12)" } },
+  quote:      { label: "Quote",     style: { background: "rgba(52, 199, 89, 0.08)", color: "#34C759", border: "1px solid rgba(52, 199, 89, 0.12)" } },
+  "follow-up":{ label: "Follow-up", style: { background: "rgba(0, 122, 255, 0.08)", color: "#007AFF", border: "1px solid rgba(0, 122, 255, 0.12)" } },
+  info:       { label: "Info",      style: { background: "rgba(0, 0, 0, 0.03)", color: "var(--text-secondary)", border: "1px solid rgba(0, 0, 0, 0.06)" } },
 };
 
 const emails: Email[] = [
@@ -181,7 +181,8 @@ const InboxComparison = () => {
                               initial={{ opacity: 0, scale: 0.7 }}
                               animate={{ opacity: 1, scale: 1 }}
                               transition={{ duration: 0.35, delay: 0.3 + email.sortOrder * 0.08, ease }}
-                              className={`text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full border ${PRIORITY_CONFIG[email.priority].className}`}
+                              className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full"
+                              style={PRIORITY_CONFIG[email.priority].style}
                             >
                               {PRIORITY_CONFIG[email.priority].label}
                             </motion.span>

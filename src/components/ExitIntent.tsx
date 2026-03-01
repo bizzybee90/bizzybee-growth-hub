@@ -42,7 +42,7 @@ const ExitIntent = () => {
               <X size={20} />
             </button>
             <span className="text-4xl mb-4 block">🐝</span>
-            <h3 className="text-2xl font-bold text-foreground mb-2">
+            <h3 className="text-2xl font-bold text-foreground mb-2" style={{ letterSpacing: "-0.015em" }}>
               Wait — don't leave without your free trial
             </h3>
             <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
