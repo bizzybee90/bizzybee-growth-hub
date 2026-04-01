@@ -1,13 +1,33 @@
 import { useState } from "react";
 import { AnimatedSection, AnimatedElement } from "@/lib/motion";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", business: "", message: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { error: insertError } = await supabase.from("leads").insert({
+      name: form.name,
+      email: form.email,
+      business: form.business,
+      message: form.message,
+    });
+
+    setLoading(false);
+
+    if (insertError) {
+      setError("Something went wrong. Please try again or email us directly.");
+      return;
+    }
+
     setSubmitted(true);
   };
 
@@ -41,10 +61,11 @@ const Contact = () => {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
+                  <label htmlFor="contact-name" className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
                     Name
                   </label>
                   <input
+                    id="contact-name"
                     type="text"
                     required
                     value={form.name}
@@ -60,10 +81,11 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
+                  <label htmlFor="contact-email" className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
                     Email
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     required
                     value={form.email}
@@ -74,10 +96,11 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
+                  <label htmlFor="contact-business" className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
                     Business name
                   </label>
                   <input
+                    id="contact-business"
                     type="text"
                     value={form.business}
                     onChange={(e) => setForm({ ...form, business: e.target.value })}
@@ -87,10 +110,11 @@ const Contact = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
+                  <label htmlFor="contact-message" className="block text-sm font-medium mb-1.5" style={{ color: "hsl(220, 9%, 30%)" }}>
                     Message
                   </label>
                   <textarea
+                    id="contact-message"
                     required
                     rows={5}
                     value={form.message}
@@ -100,8 +124,14 @@ const Contact = () => {
                     placeholder="Tell us about your business and what you need..."
                   />
                 </div>
+                {error && (
+                  <p className="text-sm text-center" style={{ color: "hsl(0, 72%, 51%)" }}>
+                    {error}
+                  </p>
+                )}
                 <button
                   type="submit"
+                  disabled={loading}
                   className="w-full inline-flex items-center justify-center gap-2 font-medium transition-all hover:scale-[1.01] active:scale-[0.99]"
                   style={{
                     background: "hsl(35, 55%, 55%)",
@@ -111,10 +141,11 @@ const Contact = () => {
                     fontSize: 15,
                     boxShadow: "0 2px 12px rgba(213,149,67,0.2)",
                     border: "none",
-                    cursor: "pointer",
+                    cursor: loading ? "not-allowed" : "pointer",
+                    opacity: loading ? 0.7 : 1,
                   }}
                 >
-                  Send message <ArrowRight size={16} />
+                  {loading ? "Sending..." : <>Send message <ArrowRight size={16} /></>}
                 </button>
               </form>
             )}

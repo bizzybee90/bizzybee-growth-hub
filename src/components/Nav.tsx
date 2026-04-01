@@ -100,6 +100,12 @@ const Nav = () => {
  </Link>
  ))}
  <a
+ href="https://app.bizzybee.co.uk"
+ className="text-base font-medium text-foreground py-2"
+ >
+ Log in
+ </a>
+ <a
  href="/pricing"
  className="inline-flex items-center justify-center px-5 py-3 text-sm font-medium mt-2" style={{ background: "var(--accent-primary)", color: "white", borderRadius: "var(--radius-pill)", boxShadow: "var(--shadow-card)" }}
  >

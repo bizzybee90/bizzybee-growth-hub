@@ -40,7 +40,7 @@ const Hero = () => (
             Start Your Free Trial <ArrowRight size={18} />
           </Link>
           <a
-            href="#how-it-works"
+            href="#features"
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors text-sm font-medium group"
           >
             <span className="w-10 h-10 rounded-full border border-border flex items-center justify-center group-hover:border-primary transition-colors">

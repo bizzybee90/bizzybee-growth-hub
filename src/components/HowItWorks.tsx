@@ -82,7 +82,7 @@ const HowItWorks = () => {
   };
 
   return (
-    <AnimatedSection id="how-it-works" className="py-24 md:py-32" style={{ background: "hsl(40, 30%, 99%)" }}>
+    <AnimatedSection id="features" className="py-24 md:py-32" style={{ background: "hsl(40, 30%, 99%)" }}>
       <div className="container mx-auto px-6">
         <AnimatedElement className="text-center mb-12">
           <span

@@ -109,6 +109,9 @@ const PricingCards = ({ showFullPage = false }: { showFullPage?: boolean }) => {
             <Sparkles size={14} />
             {showFounder ? "Showing Founder Pricing" : "Are you one of our first 50 customers?"}
           </button>
+          <p className="mt-2" style={{ fontSize: 12, color: "hsl(220, 9%, 50%)" }}>
+            Lock in this price for life — limited spots remaining
+          </p>
         </AnimatedElement>
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -191,7 +194,7 @@ const PricingCards = ({ showFullPage = false }: { showFullPage?: boolean }) => {
                   </ul>
 
                   <a
-                    href="#pricing"
+                    href={`https://app.bizzybee.co.uk/auth?plan=${plan.name.toLowerCase()}`}
                     className="inline-flex items-center justify-center gap-2 font-medium transition-all"
                     style={{
                       background: plan.popular ? "hsl(35, 55%, 55%)" : "transparent",
